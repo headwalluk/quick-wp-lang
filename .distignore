@@ -16,9 +16,11 @@ node_modules
 
 # Documentation (keep readme.txt for WordPress.org)
 README.md
+CHANGELOG.md
 CONTRIBUTING.md
 
 # Build/test files
+build
 tests
 bin
 .phpcs.xml.dist
