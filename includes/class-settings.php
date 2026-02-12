@@ -152,6 +152,12 @@ class Settings {
 		}
 
 		printf( '</fieldset>' );
+
+		// Empty state help text.
+		printf(
+			'<p class="description" style="margin-top: 12px;">%s</p>',
+			esc_html__( 'Select at least one language to enable language selection in your posts and pages.', 'quick-wp-lang' )
+		);
 	}
 
 	/**

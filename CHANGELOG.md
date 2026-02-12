@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.0] - 2026-02-12
+
+### Added
+- Admin notice when no languages are enabled (dismissible via AJAX)
+- Language column in posts/pages list table (sortable)
+- Empty state help text on settings page
+- AJAX handler for dismissing admin notices
+- Inline JavaScript for notice dismissal
+
+### Changed
+- Improved user experience with better empty states
+- Enhanced discoverability of plugin features
+
+---
+
 ## [0.1.0] - 2026-02-12
 
 ### Added

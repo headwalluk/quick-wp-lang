@@ -1,9 +1,9 @@
 # Project Tracker — Quick WP Lang
 
-**Version:** 0.1.0 (Beta)  
+**Version:** 1.0.0 🎉  
 **Last Updated:** 12 February 2026  
-**Current Phase:** Beta Testing  
-**Overall Progress:** 85%
+**Current Phase:** Production Ready  
+**Overall Progress:** 95%
 
 ---
 
@@ -84,19 +84,53 @@
 | 2.1 | Settings page — post type selection | 🔄 Filter available, UI pending |
 | 2.2 | Settings page — language list curation | ✅ Complete |
 | 2.3 | Settings page — header toggle | 🔄 Pending |
-| 2.4 | Quick Edit column showing language override | 🔄 Pending |
-| 2.5 | Uninstall routine | 🔄 Pending |
+| 2.4 | Language column in posts list table | ✅ Complete |
+| 2.5 | Admin notice when no languages are enabled | ✅ Complete |
+| 2.6 | Empty state messaging on settings page | ✅ Complete |
+| 2.7 | Uninstall routine | 🔄 Pending |
+
+### Milestone 3 — Future Enhancements
+
+| # | Task | Status |
+|---|------|--------|
+| 3.1 | Post count next to each language on settings page | 🔄 Planned |
+| 3.2 | Quick Edit support for language selection | 🔄 Planned |
+| 3.3 | Improved meta box styling with icon | 🔄 Planned |
+| 3.4 | First-run experience with redirect to settings | 🔄 Planned |
+| 3.5 | Enhanced keyboard accessibility | 🔄 Planned |
 
 ---
 
 ## Technical Debt
 
-### Minor
+### Completed (v0.1.0)
 
-- Consider adding admin notice when no languages are enabled on settings page
+- ✅ Admin notice when no languages are enabled
+- ✅ Language column in posts list table (sortable)
+- ✅ Empty state help text on settings page
+
+### Pending
+
 - Add bulk edit support for language assignment
 - Implement settings toggle for `Content-Language` HTTP header (currently always enabled)
 - Implement settings UI for post type selection (filter exists, UI pending)
+- Uninstall routine to clean up post meta and options
+
+### Future Enhancements
+
+#### High Priority
+- **Post count on settings page** — Show "English (UK) (3 posts using)" next to each language checkbox
+- **Quick Edit support** — Add language dropdown to Quick Edit panel for faster updates
+- **First-run experience** — Redirect to settings page on activation or show persistent setup notice
+
+#### Medium Priority
+- **Improved meta box styling** — Add visual indicator icon, better spacing, show current site default language name
+- **Enhanced keyboard accessibility** — Ensure full keyboard navigation, consider accesskey attributes
+
+#### Low Priority
+- Consider adding language filter dropdown on posts list page
+- Add "How to use" documentation panel on settings page
+- Add REST API support for headless WordPress setups
 
 ---
 

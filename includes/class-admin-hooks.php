@@ -178,4 +178,225 @@ class Admin_Hooks {
 
 		return is_array( $post_types ) ? $post_types : array();
 	}
+
+	/**
+	 * Display admin notice when no languages are enabled.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function show_no_languages_notice(): void {
+		$should_show = false;
+
+		// Check if user can manage options.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Check if notice has been dismissed.
+		$dismissed_notices = get_option( OPT_DISMISSED_NOTICES, array() );
+		$dismissed_notices = is_array( $dismissed_notices ) ? $dismissed_notices : array();
+
+		if ( in_array( 'no_languages', $dismissed_notices, true ) ) {
+			return;
+		}
+
+		// Check if any languages are enabled.
+		$enabled_languages = get_option( OPT_ENABLED_LANGUAGES, array() );
+		$enabled_languages = is_array( $enabled_languages ) ? $enabled_languages : array();
+
+		if ( empty( $enabled_languages ) ) {
+			$should_show = true;
+		}
+
+		if ( $should_show ) {
+			$settings_url = admin_url( 'options-general.php?page=' . SETTINGS_PAGE_SLUG );
+
+			printf(
+				'<div class="notice notice-info is-dismissible" data-notice-id="no_languages"><p><strong>%s</strong> %s <a href="%s">%s</a></p></div>',
+				esc_html__( 'Quick WP Lang:', 'quick-wp-lang' ),
+				esc_html__( 'No languages are enabled yet.', 'quick-wp-lang' ),
+				esc_url( $settings_url ),
+				esc_html__( 'Configure your languages to get started →', 'quick-wp-lang' )
+			);
+		}
+	}
+
+	/**
+	 * Handle AJAX request to dismiss admin notice.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_dismiss_notice(): void {
+		$should_dismiss = true;
+
+		// Check nonce.
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+
+		if ( ! wp_verify_nonce( $nonce, 'qwl_dismiss_notice' ) ) {
+			$should_dismiss = false;
+		}
+
+		// Check permissions.
+		if ( $should_dismiss && ! current_user_can( 'manage_options' ) ) {
+			$should_dismiss = false;
+		}
+
+		if ( $should_dismiss ) {
+			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+			$notice_id = isset( $_POST['notice_id'] ) ? sanitize_text_field( wp_unslash( $_POST['notice_id'] ) ) : '';
+			// phpcs:enable
+
+			if ( ! empty( $notice_id ) ) {
+				$dismissed_notices   = get_option( OPT_DISMISSED_NOTICES, array() );
+				$dismissed_notices   = is_array( $dismissed_notices ) ? $dismissed_notices : array();
+				$dismissed_notices[] = $notice_id;
+
+				update_option( OPT_DISMISSED_NOTICES, array_unique( $dismissed_notices ) );
+
+				wp_send_json_success();
+			}
+		}
+
+		wp_send_json_error();
+	}
+
+	/**
+	 * Add language column to posts list table.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, string> $columns Existing columns.
+	 *
+	 * @return array<string, string> Modified columns.
+	 */
+	public function add_language_column( array $columns ): array {
+		$result = array();
+
+		// Insert language column before date column.
+		foreach ( $columns as $key => $label ) {
+			if ( 'date' === $key ) {
+				$result['qwl_language'] = __( 'Language', 'quick-wp-lang' );
+			}
+			$result[ $key ] = $label;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Render language column content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $column_name Column name.
+	 * @param int    $post_id     Post ID.
+	 *
+	 * @return void
+	 */
+	public function render_language_column( string $column_name, int $post_id ): void {
+		if ( 'qwl_language' !== $column_name ) {
+			return;
+		}
+
+		$language = get_post_meta( $post_id, META_KEY_LANGUAGE, true );
+		$language = is_string( $language ) ? $language : '';
+
+		if ( empty( $language ) ) {
+			printf(
+				'<span style="color: #999;">%s</span>',
+				esc_html__( '—', 'quick-wp-lang' )
+			);
+		} else {
+			printf(
+				'<code>%s</code>',
+				esc_html( $language )
+			);
+		}
+	}
+
+	/**
+	 * Make language column sortable.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, string> $columns Sortable columns.
+	 *
+	 * @return array<string, string> Modified sortable columns.
+	 */
+	public function make_language_column_sortable( array $columns ): array {
+		$columns['qwl_language'] = 'qwl_language';
+		return $columns;
+	}
+
+	/**
+	 * Modify query to sort by language column.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param \WP_Query $query The WP_Query instance.
+	 *
+	 * @return void
+	 */
+	public function sort_by_language_column( \WP_Query $query ): void {
+		$should_modify = false;
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		if ( ! $query->is_main_query() ) {
+			return;
+		}
+
+		$orderby = $query->get( 'orderby' );
+
+		if ( 'qwl_language' === $orderby ) {
+			$should_modify = true;
+		}
+
+		if ( $should_modify ) {
+			$query->set( 'meta_key', META_KEY_LANGUAGE );
+			$query->set( 'orderby', 'meta_value' );
+		}
+	}
+
+	/**
+	 * Enqueue admin assets for notice dismissal.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_admin_assets(): void {
+		$screen = get_current_screen();
+
+		if ( ! $screen ) {
+			return;
+		}
+
+		// Only enqueue on relevant admin pages.
+		$allowed_screens = array( 'dashboard', 'edit-post', 'edit-page', 'post', 'page' );
+
+		if ( in_array( $screen->id, $allowed_screens, true ) || strpos( $screen->id, 'edit-' ) === 0 ) {
+			wp_add_inline_script(
+				'jquery',
+				"
+				jQuery(function($) {
+					$(document).on('click', '.notice[data-notice-id] .notice-dismiss', function() {
+						var noticeId = $(this).closest('.notice').data('notice-id');
+						$.post(ajaxurl, {
+							action: 'qwl_dismiss_notice',
+							notice_id: noticeId,
+							nonce: '" . wp_create_nonce( 'qwl_dismiss_notice' ) . "'
+						});
+					});
+				});
+				"
+			);
+		}
+	}
 }

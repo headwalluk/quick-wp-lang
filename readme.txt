@@ -4,7 +4,7 @@ Tags: language, hreflang, seo, multilingual, locale
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 0.1.0
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,14 @@ Yes. Use the `qwl_languages` filter to add or modify the available languages pro
 
 == Changelog ==
 
+= 1.0.0 - 2026-02-12 =
+* Added: Admin notice when no languages are enabled (dismissible)
+* Added: Language column in posts/pages list table (sortable)
+* Added: Empty state help text on settings page
+* Added: AJAX handler for dismissing admin notices
+* Improved: User experience with better empty states
+* Improved: Enhanced discoverability of plugin features
+
 = 0.1.0 - 2026-02-12 =
 * Initial beta release
 * Meta box for language selection with radio button UI
@@ -105,5 +113,5 @@ Yes. Use the `qwl_languages` filter to add or modify the available languages pro
 
 == Upgrade Notice ==
 
-= 0.1.0 =
-Initial beta release. Please report any issues on the support forum.
+= 1.0.0 =
+Stable 1.0.0 release with improved UX: admin notices, sortable language column, and better empty states.

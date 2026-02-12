@@ -32,6 +32,9 @@ const SETTINGS_SECTION_ID   = 'qwl_languages_section';
 const NONCE_ACTION_SETTINGS = 'qwl_settings_save';
 const NONCE_NAME_SETTINGS   = 'qwl_settings_nonce';
 
+// Admin notice options.
+const OPT_DISMISSED_NOTICES = 'qwl_dismissed_notices';
+
 // Filter/action hook priorities.
 const PRIORITY_LANGUAGE_ATTRIBUTES = 999;
 const PRIORITY_WP_HEAD             = 1;

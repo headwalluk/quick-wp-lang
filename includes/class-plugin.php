@@ -75,6 +75,12 @@ class Plugin {
 		if ( is_admin() ) {
 			add_action( 'add_meta_boxes', array( $this->get_admin_hooks(), 'register_meta_box' ) );
 			add_action( 'save_post', array( $this->get_admin_hooks(), 'save_meta_box' ), 10, 2 );
+			add_action( 'admin_notices', array( $this->get_admin_hooks(), 'show_no_languages_notice' ) );
+			add_action( 'admin_enqueue_scripts', array( $this->get_admin_hooks(), 'enqueue_admin_assets' ) );
+			add_action( 'wp_ajax_qwl_dismiss_notice', array( $this->get_admin_hooks(), 'ajax_dismiss_notice' ) );
+
+			// Add language column to post types.
+			$this->register_language_columns();
 		}
 
 		// Register public hooks.
@@ -99,6 +105,39 @@ class Plugin {
 			false,
 			dirname( plugin_basename( QWL_PLUGIN_FILE ) ) . '/languages'
 		);
+	}
+
+	/**
+	 * Register language column for all supported post types.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	private function register_language_columns(): void {
+		$post_types = get_post_types( array( 'public' => true ), 'names' );
+
+		/**
+		 * Filter the post types that support the language column.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array<string> $post_types Array of post type names.
+		 */
+		$post_types = apply_filters( 'qwl_supported_post_types', $post_types );
+
+		if ( ! is_array( $post_types ) ) {
+			return;
+		}
+
+		foreach ( $post_types as $post_type ) {
+			add_filter( "manage_{$post_type}_posts_columns", array( $this->get_admin_hooks(), 'add_language_column' ) );
+			add_action( "manage_{$post_type}_posts_custom_column", array( $this->get_admin_hooks(), 'render_language_column' ), 10, 2 );
+			add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this->get_admin_hooks(), 'make_language_column_sortable' ) );
+		}
+
+		// Add query modifier for sorting.
+		add_action( 'pre_get_posts', array( $this->get_admin_hooks(), 'sort_by_language_column' ) );
 	}
 
 	/**
