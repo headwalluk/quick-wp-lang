@@ -1,0 +1,47 @@
+# Development files
+.git
+.github
+dev-notes
+phpcs.xml
+composer.json
+composer.lock
+package.json
+package-lock.json
+node_modules
+
+# Git files
+.gitignore
+.gitattributes
+.distignore
+
+# Documentation (keep readme.txt for WordPress.org)
+README.md
+CONTRIBUTING.md
+
+# Build/test files
+tests
+bin
+.phpcs.xml.dist
+phpunit.xml
+phpunit.xml.dist
+
+# Environment files
+.env
+.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Backup files
+*.bak
+*.swp
+*.swo
+*~
