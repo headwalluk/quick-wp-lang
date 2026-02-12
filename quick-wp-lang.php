@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Quick WP Lang
- * Plugin URI: https://headwall.tech/plugins/quick-wp-lang
+ * Plugin URI: https://headwall-hosting.com/plugins/quick-wp-lang/
  * Description: Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
- * Author: Headwall
- * Author URI: https://headwall.tech
+ * Author: Paul Faulkner
+ * Author URI: https://headwall-hosting.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: quick-wp-lang
@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || die();
 
 // Define plugin constants.
-define( 'QWL_VERSION', '1.0.0' );
+define( 'QWL_VERSION', '1.0.1' );
 define( 'QWL_PLUGIN_FILE', __FILE__ );
 define( 'QWL_PLUGIN_DIR', __DIR__ );
 define( 'QWL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

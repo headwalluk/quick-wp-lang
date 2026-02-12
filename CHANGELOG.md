@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.1] - 2026-02-12
+
+### Changed
+- Updated plugin author from "Headwall" to "Paul Faulkner"
+- Updated plugin URI to https://headwall-hosting.com/plugins/quick-wp-lang/
+- Updated author URI to https://headwall-hosting.com/
+
+### Added
+- GitHub Actions release workflow for automated release builds
+- .distignore file to exclude development files from distribution packages
+
+---
+
 ## [1.0.0] - 2026-02-12
 
 ### Added

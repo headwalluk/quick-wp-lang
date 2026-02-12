@@ -1,8 +1,5 @@
-# Copyright (C) 2026 Headwall
-# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Language: en_GB\n"
 "Project-Id-Version: Quick WP Lang 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/quick-wp-lang\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -12,6 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-02-12T20:02:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: en_GB\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quick-wp-lang\n"
 
@@ -20,25 +18,10 @@ msgstr ""
 msgid "Quick WP Lang"
 msgstr "Quick WP Lang"
 
-#. Plugin URI of the plugin
-#: quick-wp-lang.php
-msgid "https://headwall.tech/plugins/quick-wp-lang"
-msgstr "https://headwall.tech/plugins/quick-wp-lang"
-
 #. Description of the plugin
 #: quick-wp-lang.php
 msgid "Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO."
 msgstr "Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO."
-
-#. Author of the plugin
-#: quick-wp-lang.php
-msgid "Headwall"
-msgstr "Headwall"
-
-#. Author URI of the plugin
-#: quick-wp-lang.php
-msgid "https://headwall.tech"
-msgstr "https://headwall.tech"
 
 #: includes/class-admin-hooks.php:35
 #: includes/class-settings.php:43
@@ -329,3 +312,18 @@ msgstr "Chinese (Simplified)"
 #: includes/functions-languages.php:78
 msgid "Chinese (Traditional)"
 msgstr "Chinese (Traditional)"
+
+#. Plugin URI of the plugin
+#: quick-wp-lang.php
+msgid "https://headwall-hosting.com/plugins/quick-wp-lang/"
+msgstr "https://headwall-hosting.com/plugins/quick-wp-lang/"
+
+#. Author of the plugin
+#: quick-wp-lang.php
+msgid "Paul Faulkner"
+msgstr "Paul Faulkner"
+
+#. Author URI of the plugin
+#: quick-wp-lang.php
+msgid "https://headwall-hosting.com/"
+msgstr "https://headwall-hosting.com/"

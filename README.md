@@ -1,12 +1,12 @@
 # Quick WP Lang
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 ![WordPress](https://img.shields.io/badge/wordpress-6.0%2B-blue.svg)
 ![PHP](https://img.shields.io/badge/php-8.0%2B-purple.svg)
 ![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)
 ![HPOS Compatible](https://img.shields.io/badge/WooCommerce-HPOS%20Compatible-96588a.svg)
 
-**Version:** 1.0.0  
+**Version:** 1.0.1  
 **Requires WordPress:** 6.0+  
 **Requires PHP:** 8.0+  
 **License:** GPL v2 or later
