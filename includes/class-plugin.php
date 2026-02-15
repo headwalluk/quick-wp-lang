@@ -88,7 +88,12 @@ class Plugin {
 			add_filter( 'language_attributes', array( $this->get_public_hooks(), 'filter_language_attributes' ), PRIORITY_LANGUAGE_ATTRIBUTES );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_hreflang_tags' ), PRIORITY_WP_HEAD );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_og_locale' ), PRIORITY_WP_HEAD );
-			add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
+
+			// Only send Content-Language header if enabled in settings.
+			$header_enabled = get_option( OPT_ENABLE_CONTENT_LANGUAGE_HEADER, true );
+			if ( rest_sanitize_boolean( $header_enabled ) ) {
+				add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
+			}
 		}
 	}
 

@@ -21,7 +21,8 @@ const NONCE_NAME_META_BOX   = 'qwl_meta_box_nonce';
 const DEF_LANGUAGE = ''; // Empty = site default.
 
 // Options keys.
-const OPT_ENABLED_LANGUAGES = 'qwl_enabled_languages';
+const OPT_ENABLED_LANGUAGES              = 'qwl_enabled_languages';
+const OPT_ENABLE_CONTENT_LANGUAGE_HEADER = 'qwl_enable_content_language_header';
 
 // Settings page identifiers.
 const SETTINGS_PAGE_SLUG    = 'qwl-settings';

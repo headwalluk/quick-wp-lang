@@ -65,6 +65,16 @@ class Settings {
 			)
 		);
 
+		register_setting(
+			SETTINGS_OPTION_GROUP,
+			OPT_ENABLE_CONTENT_LANGUAGE_HEADER,
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => true,
+			)
+		);
+
 		add_settings_section(
 			SETTINGS_SECTION_ID,
 			__( 'Available Languages', 'quick-wp-lang' ),
@@ -76,6 +86,14 @@ class Settings {
 			'qwl_enabled_languages_field',
 			__( 'Enable Languages', 'quick-wp-lang' ),
 			array( $this, 'render_languages_field' ),
+			SETTINGS_PAGE_SLUG,
+			SETTINGS_SECTION_ID
+		);
+
+		add_settings_field(
+			'qwl_enable_content_language_header_field',
+			__( 'Content-Language Header', 'quick-wp-lang' ),
+			array( $this, 'render_header_toggle_field' ),
 			SETTINGS_PAGE_SLUG,
 			SETTINGS_SECTION_ID
 		);
@@ -163,6 +181,30 @@ class Settings {
 		printf(
 			'<p class="description" style="margin-top: 12px;">%s</p>',
 			esc_html__( 'Select at least one language to enable language selection in your posts and pages.', 'quick-wp-lang' )
+		);
+	}
+
+	/**
+	 * Render Content-Language header toggle field.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function render_header_toggle_field(): void {
+		$enabled = get_option( OPT_ENABLE_CONTENT_LANGUAGE_HEADER, true );
+		$enabled = rest_sanitize_boolean( $enabled );
+
+		printf(
+			'<label for="qwl_enable_content_language_header"><input type="checkbox" name="%s" id="qwl_enable_content_language_header" value="1"%s /> %s</label>',
+			esc_attr( OPT_ENABLE_CONTENT_LANGUAGE_HEADER ),
+			checked( $enabled, true, false ),
+			esc_html__( 'Send Content-Language HTTP header for posts with alternative languages', 'quick-wp-lang' )
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'When enabled, the plugin will send a Content-Language HTTP header for posts/pages with an assigned language. This helps search engines and browsers identify the content language.', 'quick-wp-lang' )
 		);
 	}
 
