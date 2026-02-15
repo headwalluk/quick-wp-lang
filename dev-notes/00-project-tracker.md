@@ -87,7 +87,7 @@
 | 2.4 | Language column in posts list table | ✅ Complete |
 | 2.5 | Admin notice when no languages are enabled | ✅ Complete |
 | 2.6 | Empty state messaging on settings page | ✅ Complete |
-| 2.7 | Uninstall routine | 🔄 Pending |
+| 2.7 | Uninstall routine | ✅ Complete |
 
 ### Milestone 3 — Settings Page Polish (v1.1.0)
 
