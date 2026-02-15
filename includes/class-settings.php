@@ -28,6 +28,7 @@ class Settings {
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 	}
 
 	/**
@@ -44,6 +45,29 @@ class Settings {
 			'manage_options',
 			SETTINGS_PAGE_SLUG,
 			array( $this, 'render_settings_page' )
+		);
+	}
+
+	/**
+	 * Enqueue admin scripts and styles.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $hook Current admin page hook.
+	 *
+	 * @return void
+	 */
+	public function enqueue_admin_scripts( string $hook ): void {
+		if ( 'settings_page_' . SETTINGS_PAGE_SLUG !== $hook ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'qwl-settings-search',
+			plugins_url( 'assets/admin/settings-search.js', __DIR__ ),
+			array(),
+			PLUGIN_VERSION,
+			true
 		);
 	}
 
@@ -152,6 +176,13 @@ class Settings {
 		$enabled_languages = is_array( $enabled_languages ) ? $enabled_languages : array();
 		$site_locale       = get_locale();
 
+		// Search box.
+		printf(
+			'<div style="margin-bottom: 12px;"><input type="text" id="qwl-language-search" placeholder="%s" style="width: 100%%; max-width: 400px;" /> <button type="button" id="qwl-language-search-clear" class="button" style="vertical-align: top;">%s</button></div>',
+			esc_attr__( 'Search languages by name or code...', 'quick-wp-lang' ),
+			esc_html__( 'Clear', 'quick-wp-lang' )
+		);
+
 		printf( '<fieldset>' );
 		printf( '<legend class="screen-reader-text"><span>%s</span></legend>', esc_html__( 'Enable Languages', 'quick-wp-lang' ) );
 
@@ -163,7 +194,9 @@ class Settings {
 			$suffix         = $is_site_locale ? ' <em>' . esc_html__( '(site default language)', 'quick-wp-lang' ) . '</em>' : '';
 
 			printf(
-				'<label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s%s</label><br />',
+				'<div class="qwl-language-item" data-name="%s" data-locale="%s"><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s%s</label></div>',
+				esc_attr( $name ),
+				esc_attr( $locale ),
 				esc_attr( $field_id ),
 				esc_attr( OPT_ENABLED_LANGUAGES ),
 				esc_attr( $field_id ),
