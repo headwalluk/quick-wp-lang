@@ -132,22 +132,28 @@ class Settings {
 		$all_languages     = get_available_languages_list();
 		$enabled_languages = get_option( OPT_ENABLED_LANGUAGES, array() );
 		$enabled_languages = is_array( $enabled_languages ) ? $enabled_languages : array();
+		$site_locale       = get_locale();
 
 		printf( '<fieldset>' );
 		printf( '<legend class="screen-reader-text"><span>%s</span></legend>', esc_html__( 'Enable Languages', 'quick-wp-lang' ) );
 
 		foreach ( $all_languages as $locale => $name ) {
-			$field_id = 'qwl_lang_' . esc_attr( $locale );
-			$checked  = in_array( $locale, $enabled_languages, true );
+			$field_id       = 'qwl_lang_' . esc_attr( $locale );
+			$checked        = in_array( $locale, $enabled_languages, true );
+			$is_site_locale = ( $locale === $site_locale );
+			$disabled       = $is_site_locale ? ' disabled' : '';
+			$suffix         = $is_site_locale ? ' <em>' . esc_html__( '(site default language)', 'quick-wp-lang' ) . '</em>' : '';
 
 			printf(
-				'<label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s /> %s</label><br />',
+				'<label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s%s</label><br />',
 				esc_attr( $field_id ),
 				esc_attr( OPT_ENABLED_LANGUAGES ),
 				esc_attr( $field_id ),
 				esc_attr( $locale ),
 				checked( $checked, true, false ),
-				esc_html( $name )
+				$disabled, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Boolean disabled attribute.
+				esc_html( $name ),
+				$suffix // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped above.
 			);
 		}
 
