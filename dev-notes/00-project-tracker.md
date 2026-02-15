@@ -48,7 +48,7 @@
 - [x] Admin settings page under **Settings → Content Language**.
 - [ ] Option: select which post types display the meta box (filter available, UI pending).
 - [x] Option: curate/restrict the available language list.
-- [ ] Option: toggle `Content-Language` HTTP header on/off (always enabled in v0.1.0).
+- [x] Option: toggle `Content-Language` HTTP header on/off.
 
 ### R4 — General / Non-Functional
 
@@ -83,7 +83,7 @@
 |---|------|--------|
 | 2.1 | Settings page — post type selection | 🔄 Filter available, UI pending |
 | 2.2 | Settings page — language list curation | ✅ Complete |
-| 2.3 | Settings page — header toggle | 🔄 Pending |
+| 2.3 | Settings page — header toggle | ✅ Complete |
 | 2.4 | Language column in posts list table | ✅ Complete |
 | 2.5 | Admin notice when no languages are enabled | ✅ Complete |
 | 2.6 | Empty state messaging on settings page | ✅ Complete |
