@@ -93,7 +93,7 @@
 
 | # | Task | Status |
 |---|------|--------|
-| 3.1 | Disable site default language checkbox + italic "(site default language)" note | 🔄 Pending |
+| 3.1 | Disable site default language checkbox + italic "(site default language)" note | ✅ Complete |
 | 3.2 | Search/filter textbox above checkbox list (JS keyup filter by name or locale code) | 🔄 Pending |
 | 3.3 | Show locale code next to language name in lighter text (e.g. "German `de_DE`") | 🔄 Pending |
 | 3.4 | Enabled count indicator — "X of Y languages enabled" summary | 🔄 Pending |
