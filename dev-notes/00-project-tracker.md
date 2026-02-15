@@ -99,15 +99,27 @@
 | 3.4 | Enabled count indicator — "X of Y languages enabled" summary | 🔄 Pending |
 | 3.5 | Group enabled languages at top of list (float checked above unchecked) | 🔄 Pending |
 
-### Milestone 4 — Future Enhancements
+### Milestone 4 — Fix PHPCS Prefix Violations (v1.1.1)
 
 | # | Task | Status |
 |---|------|--------|
-| 4.1 | Post count next to each language on settings page | 🔄 Planned |
-| 4.2 | Quick Edit support for language selection | 🔄 Planned |
-| 4.3 | Improved meta box styling with icon | 🔄 Planned |
-| 4.4 | First-run experience with redirect to settings | 🔄 Planned |
-| 4.5 | Enhanced keyboard accessibility | 🔄 Planned |
+| 4.1 | Review and extend namespace/function prefixes to avoid "too short" warnings | 🔄 Pending |
+| 4.2 | Update constants to use longer prefix (e.g. `QUICK_WP_LANG_VERSION` instead of `QWL_VERSION`) | 🔄 Pending |
+| 4.3 | Update hook names to use longer prefix (e.g. `quick_wp_lang_languages` instead of `qwl_languages`) | 🔄 Pending |
+| 4.4 | Update global function and variable names with longer prefix | 🔄 Pending |
+| 4.5 | Run phpcs and verify zero violations | 🔄 Pending |
+
+**Note:** The "qwl" prefix is functional but WordPress Coding Standards considers 3-character prefixes too short to guarantee uniqueness. This milestone extends prefixes to reduce collision risk.
+
+### Milestone 5 — Future Enhancements
+
+| # | Task | Status |
+|---|------|--------|
+| 5.1 | Post count next to each language on settings page | 🔄 Planned |
+| 5.2 | Quick Edit support for language selection | 🔄 Planned |
+| 5.3 | Improved meta box styling with icon | 🔄 Planned |
+| 5.4 | First-run experience with redirect to settings | 🔄 Planned |
+| 5.5 | Enhanced keyboard accessibility | 🔄 Planned |
 
 ---
 
