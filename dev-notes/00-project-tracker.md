@@ -89,15 +89,25 @@
 | 2.6 | Empty state messaging on settings page | ✅ Complete |
 | 2.7 | Uninstall routine | 🔄 Pending |
 
-### Milestone 3 — Future Enhancements
+### Milestone 3 — Settings Page Polish (v1.1.0)
 
 | # | Task | Status |
 |---|------|--------|
-| 3.1 | Post count next to each language on settings page | 🔄 Planned |
-| 3.2 | Quick Edit support for language selection | 🔄 Planned |
-| 3.3 | Improved meta box styling with icon | 🔄 Planned |
-| 3.4 | First-run experience with redirect to settings | 🔄 Planned |
-| 3.5 | Enhanced keyboard accessibility | 🔄 Planned |
+| 3.1 | Disable site default language checkbox + italic "(site default language)" note | 🔄 Pending |
+| 3.2 | Search/filter textbox above checkbox list (JS keyup filter by name or locale code) | 🔄 Pending |
+| 3.3 | Show locale code next to language name in lighter text (e.g. "German `de_DE`") | 🔄 Pending |
+| 3.4 | Enabled count indicator — "X of Y languages enabled" summary | 🔄 Pending |
+| 3.5 | Group enabled languages at top of list (float checked above unchecked) | 🔄 Pending |
+
+### Milestone 4 — Future Enhancements
+
+| # | Task | Status |
+|---|------|--------|
+| 4.1 | Post count next to each language on settings page | 🔄 Planned |
+| 4.2 | Quick Edit support for language selection | 🔄 Planned |
+| 4.3 | Improved meta box styling with icon | 🔄 Planned |
+| 4.4 | First-run experience with redirect to settings | 🔄 Planned |
+| 4.5 | Enhanced keyboard accessibility | 🔄 Planned |
 
 ---
 
