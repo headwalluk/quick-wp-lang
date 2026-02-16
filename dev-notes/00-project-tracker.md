@@ -3,7 +3,7 @@
 **Version:** 1.0.0 🎉  
 **Last Updated:** 16 February 2026  
 **Current Phase:** Production Ready  
-**Overall Progress:** 92% (M1-M4: 23/25 tasks complete)
+**Overall Progress:** 96% (M1-M4: 24/25 tasks complete)
 
 ---
 
@@ -94,7 +94,7 @@
 | # | Task | Status |
 |---|------|--------|
 | 3.1 | Disable site default language checkbox + italic "(site default language)" note | ✅ Complete |
-| 3.2 | Search/filter textbox above checkbox list (JS keyup filter by name or locale code) | 🔄 Pending |
+| 3.2 | Search/filter textbox above checkbox list (JS keyup filter by name or locale code) | ✅ Complete |
 | 3.3 | Show locale code next to language name in lighter text (e.g. "German `de_DE`") | ✅ Complete |
 | 3.4 | Enabled count indicator — "X of Y languages enabled" summary | ✅ Complete |
 | 3.5 | Group enabled languages at top of list (float checked above unchecked) | ✅ Complete |
