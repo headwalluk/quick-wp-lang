@@ -178,6 +178,9 @@ class Settings {
 		$total_count       = count( $all_languages );
 		$enabled_count     = count( $enabled_languages );
 
+		// Sort languages: enabled first, then disabled (alphabetically within each group).
+		$sorted_languages = $this->sort_languages_by_enabled_status( $all_languages, $enabled_languages );
+
 		// Search box.
 		printf(
 			'<div style="margin-bottom: 12px;"><input type="text" id="qwl-language-search" placeholder="%s" style="width: 100%%; max-width: 400px;" /> <button type="button" id="qwl-language-search-clear" class="button" style="vertical-align: top;">%s</button></div>',
@@ -199,7 +202,7 @@ class Settings {
 		printf( '<fieldset>' );
 		printf( '<legend class="screen-reader-text"><span>%s</span></legend>', esc_html__( 'Enable Languages', 'quick-wp-lang' ) );
 
-		foreach ( $all_languages as $locale => $name ) {
+		foreach ( $sorted_languages as $locale => $name ) {
 			$field_id       = 'qwl_lang_' . esc_attr( $locale );
 			$checked        = in_array( $locale, $enabled_languages, true );
 			$is_site_locale = ( $locale === $site_locale );
@@ -280,5 +283,31 @@ class Settings {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Sort languages array with enabled languages first.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array<string, string> $all_languages    All available languages (locale => name).
+	 * @param array<string>         $enabled_languages Array of enabled locale codes.
+	 *
+	 * @return array<string, string> Sorted languages array.
+	 */
+	private function sort_languages_by_enabled_status( array $all_languages, array $enabled_languages ): array {
+		$enabled  = array();
+		$disabled = array();
+
+		foreach ( $all_languages as $locale => $name ) {
+			if ( in_array( $locale, $enabled_languages, true ) ) {
+				$enabled[ $locale ] = $name;
+			} else {
+				$disabled[ $locale ] = $name;
+			}
+		}
+
+		// Both groups are already sorted alphabetically by name (from get_available_languages_list).
+		return array_merge( $enabled, $disabled );
 	}
 }
