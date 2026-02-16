@@ -42,7 +42,6 @@ function quick_wp_lang_uninstall_cleanup() {
 			'_qwl_language'
 		)
 	);
-
 }
 
 // Execute cleanup.
