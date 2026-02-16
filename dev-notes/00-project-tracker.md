@@ -1,9 +1,9 @@
 # Project Tracker — Quick WP Lang
 
 **Version:** 1.0.0 🎉  
-**Last Updated:** 15 February 2026  
+**Last Updated:** 16 February 2026  
 **Current Phase:** Production Ready  
-**Overall Progress:** 95%
+**Overall Progress:** 80% (M1-M4: 20/25 tasks complete)
 
 ---
 
@@ -103,11 +103,11 @@
 
 | # | Task | Status |
 |---|------|--------|
-| 4.1 | Review and extend namespace/function prefixes to avoid "too short" warnings | 🔄 Pending |
-| 4.2 | Update constants to use longer prefix (e.g. `QUICK_WP_LANG_VERSION` instead of `QWL_VERSION`) | 🔄 Pending |
-| 4.3 | Update hook names to use longer prefix (e.g. `quick_wp_lang_languages` instead of `qwl_languages`) | 🔄 Pending |
-| 4.4 | Update global function and variable names with longer prefix | 🔄 Pending |
-| 4.5 | Run phpcs and verify zero violations | 🔄 Pending |
+| 4.1 | Review and extend namespace/function prefixes to avoid "too short" warnings | ✅ Complete |
+| 4.2 | Update constants to use longer prefix (e.g. `QUICK_WP_LANG_VERSION` instead of `QWL_VERSION`) | ✅ Complete |
+| 4.3 | Update hook names to use longer prefix (e.g. `quick_wp_lang_languages` instead of `qwl_languages`) | ✅ Complete |
+| 4.4 | Update global function and variable names with longer prefix | ✅ Complete |
+| 4.5 | Run phpcs and verify zero violations | ✅ Complete |
 
 **Note:** The "qwl" prefix is functional but WordPress Coding Standards considers 3-character prefixes too short to guarantee uniqueness. This milestone extends prefixes to reduce collision risk.
 
