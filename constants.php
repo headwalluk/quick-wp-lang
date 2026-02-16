@@ -21,16 +21,14 @@ const NONCE_NAME_META_BOX   = 'qwl_meta_box_nonce';
 const DEF_LANGUAGE = ''; // Empty = site default.
 
 // Options keys.
-const OPT_ENABLED_LANGUAGES = 'qwl_enabled_languages';
+const OPT_ENABLED_LANGUAGES              = 'qwl_enabled_languages';
+const OPT_ENABLED_POST_TYPES             = 'qwl_enabled_post_types';
+const OPT_ENABLE_CONTENT_LANGUAGE_HEADER = 'qwl_enable_content_language_header';
 
 // Settings page identifiers.
 const SETTINGS_PAGE_SLUG    = 'qwl-settings';
 const SETTINGS_OPTION_GROUP = 'qwl_settings_group';
 const SETTINGS_SECTION_ID   = 'qwl_languages_section';
-
-// Nonce for settings page.
-const NONCE_ACTION_SETTINGS = 'qwl_settings_save';
-const NONCE_NAME_SETTINGS   = 'qwl_settings_nonce';
 
 // Admin notice options.
 const OPT_DISMISSED_NOTICES = 'qwl_dismissed_notices';

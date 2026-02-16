@@ -4,7 +4,7 @@ Tags: language, hreflang, seo, multilingual, locale
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,8 @@ This is **not** a translation plugin. There is no concept of "the same content i
 = Features =
 
 * **Simple Meta Box** — Select language from a curated list of 50+ common languages
-* **Settings Page** — Enable only the languages you need (reduces clutter)
+* **Settings Page** — Enable only the languages you need, with search and filtering
+* **Post Type Control** — Choose which post types display the language meta box
 * **Radio Button UI** — Clean, accessible interface in the post editor sidebar
 * **SEO Optimized** — Automatically adjusts `lang` attribute, hreflang tags, and `og:locale`
 * **SEO Plugin Compatible** — Detects Yoast SEO, Rank Math, and All in One SEO
@@ -70,7 +71,7 @@ No. This plugin does not translate content or manage multilingual versions of th
 
 = Which post types are supported? =
 
-All public post types by default (posts, pages, WooCommerce products, custom post types). A filter will be available in a future version to customize this.
+Posts and pages by default. You can enable additional post types (including WooCommerce products and custom post types) under **Settings → Content Language**. Developers can also use the `quick_wp_lang_supported_post_types` filter for further customization.
 
 = Will this work with my SEO plugin? =
 
@@ -82,7 +83,7 @@ Yes. The plugin is fully HPOS (High-Performance Order Storage) compatible and wo
 
 = Can I add more languages? =
 
-Yes. Use the `qwl_languages` filter to add or modify the available languages programmatically.
+Yes. Use the `quick_wp_lang_languages` filter to add or modify the available languages programmatically.
 
 == Screenshots ==
 
@@ -91,6 +92,15 @@ Yes. Use the `qwl_languages` filter to add or modify the available languages pro
 3. Front-end output — Proper language attributes and hreflang tags
 
 == Changelog ==
+
+= 1.1.0 - 2026-02-16 =
+* Added: Post type selection setting — choose which post types display the language meta box
+* Added: Language search/filter on settings page
+* Added: Enabled languages count indicator on settings page
+* Improved: Languages sorted with enabled languages shown first on settings page
+* Fixed: Language column now respects enabled post types setting
+* Fixed: Sorting by language column no longer hides posts without a language set
+* Fixed: Uninstall now cleans up all plugin options
 
 = 1.0.1 - 2026-02-12 =
 * Changed: Updated plugin author and URI metadata
@@ -117,6 +127,9 @@ Yes. Use the `qwl_languages` filter to add or modify the available languages pro
 * Translation ready
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+New post type selection setting, language search on settings page, and several bug fixes.
 
 = 1.0.1 =
 Minor update with metadata changes and automated release workflow.

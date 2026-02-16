@@ -15,6 +15,7 @@ node_modules
 .distignore
 
 # Documentation (keep readme.txt for WordPress.org)
+AGENTS.md
 README.md
 CHANGELOG.md
 CONTRIBUTING.md

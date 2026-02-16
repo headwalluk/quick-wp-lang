@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-02-16
+
+### Added
+- Post type selection setting — choose which post types display the language meta box
+- Search/filter textbox above language checkboxes on settings page
+- Live filtering by language name or locale code
+- Locale code display next to language names (e.g., "German `de_DE`")
+- Enabled count indicator showing "X of Y languages enabled" summary
+- Automatic grouping of enabled languages at top of checkbox list
+
+### Fixed
+- Language column now respects enabled post types setting
+- Sorting by language column no longer hides posts without a language set
+- Uninstall now cleans up all plugin options including `qwl_enabled_post_types`
+- Removed unnecessary `wp_cache_flush()` from uninstall routine
+- BCP 47 format validation on Content-Language header output
+- Resolved potential undefined variable warning in `output_og_locale()`
+
+### Changed
+- Default enabled post types changed from all public types to post and page only
+- Settings page field order: Content-Language Header and Post Types now appear above the language list
+- Notice dismiss script rewritten in vanilla JavaScript (removed jQuery dependency)
+- Search input uses `input` event instead of `keyup` (covers paste and autofill)
+- Inline styles replaced with CSS classes and `wp_add_inline_style()`
+- Removed unused `NONCE_ACTION_SETTINGS` and `NONCE_NAME_SETTINGS` constants
+
+---
+
 ## [1.0.1] - 2026-02-12
 
 ### Changed
@@ -52,8 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SEO plugin compatibility (Yoast SEO, Rank Math, All in One SEO)
 - WooCommerce HPOS compatibility
 - WordPress locale to BCP 47 format conversion
-- Filter `qwl_languages` for customizing language list
-- Filter `qwl_supported_post_types` for customizing post types
+- Filter `quick_wp_lang_languages` for customizing language list
+- Filter `quick_wp_lang_supported_post_types` for customizing post types
 - Translation-ready with text domain `quick-wp-lang`
 - Follows WordPress Coding Standards (phpcs clean)
 - PHP 8.0+ with type hints and return types
@@ -75,11 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Uninstall routine to clean up post meta and options
 - Quick Edit column showing language override
-- Settings option to toggle `Content-Language` HTTP header
-- Settings option to select which post types display meta box
-- Admin notice if no languages are enabled
 - Bulk edit support
 
 ---

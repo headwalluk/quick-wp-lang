@@ -31,7 +31,7 @@ class Admin_Hooks {
 		$post_types = $this->get_supported_post_types();
 
 		add_meta_box(
-			'qwl_language_meta_box',
+			'quick_wp_lang_language_meta_box',
 			__( 'Content Language', 'quick-wp-lang' ),
 			array( $this, 'render_meta_box' ),
 			$post_types,
@@ -71,7 +71,7 @@ class Admin_Hooks {
 
 		// Site default option.
 		printf(
-			'<label><input type="radio" name="qwl_language" value="%s"%s /> %s</label><br />',
+			'<label><input type="radio" name="quick_wp_lang_language" value="%s"%s /> %s</label><br />',
 			esc_attr( DEF_LANGUAGE ),
 			checked( $current_language, DEF_LANGUAGE, false ),
 			esc_html__( 'Site Default', 'quick-wp-lang' )
@@ -80,7 +80,7 @@ class Admin_Hooks {
 		// Enabled language options.
 		foreach ( $languages as $locale => $name ) {
 			printf(
-				'<label><input type="radio" name="qwl_language" value="%s"%s /> %s</label><br />',
+				'<label><input type="radio" name="quick_wp_lang_language" value="%s"%s /> %s</label><br />',
 				esc_attr( $locale ),
 				checked( $current_language, $locale, false ),
 				esc_html( $name )
@@ -137,7 +137,7 @@ class Admin_Hooks {
 
 		if ( $should_save ) {
 			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
-			$language = isset( $_POST['qwl_language'] ) ? sanitize_text_field( wp_unslash( $_POST['qwl_language'] ) ) : DEF_LANGUAGE;
+			$language = isset( $_POST['quick_wp_lang_language'] ) ? sanitize_text_field( wp_unslash( $_POST['quick_wp_lang_language'] ) ) : DEF_LANGUAGE;
 			// phpcs:enable
 
 			// Validate language is in our list or is the default.
@@ -165,7 +165,13 @@ class Admin_Hooks {
 	 * @return array<string> Array of post type names.
 	 */
 	private function get_supported_post_types(): array {
-		$post_types = get_post_types( array( 'public' => true ), 'names' );
+		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
+		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+
+		// If option is empty, default to post and page.
+		if ( empty( $enabled_post_types ) ) {
+			$enabled_post_types = array( 'post', 'page' );
+		}
 
 		/**
 		 * Filter the post types that support the language meta box.
@@ -174,7 +180,7 @@ class Admin_Hooks {
 		 *
 		 * @param array<string> $post_types Array of post type names.
 		 */
-		$post_types = apply_filters( 'qwl_supported_post_types', $post_types );
+		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $enabled_post_types );
 
 		return is_array( $post_types ) ? $post_types : array();
 	}
@@ -236,7 +242,7 @@ class Admin_Hooks {
 		// Check nonce.
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'qwl_dismiss_notice' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'quick_wp_lang_dismiss_notice' ) ) {
 			$should_dismiss = false;
 		}
 
@@ -279,7 +285,7 @@ class Admin_Hooks {
 		// Insert language column before date column.
 		foreach ( $columns as $key => $label ) {
 			if ( 'date' === $key ) {
-				$result['qwl_language'] = __( 'Language', 'quick-wp-lang' );
+				$result['quick_wp_lang_language'] = __( 'Language', 'quick-wp-lang' );
 			}
 			$result[ $key ] = $label;
 		}
@@ -298,7 +304,7 @@ class Admin_Hooks {
 	 * @return void
 	 */
 	public function render_language_column( string $column_name, int $post_id ): void {
-		if ( 'qwl_language' !== $column_name ) {
+		if ( 'quick_wp_lang_language' !== $column_name ) {
 			return;
 		}
 
@@ -307,7 +313,7 @@ class Admin_Hooks {
 
 		if ( empty( $language ) ) {
 			printf(
-				'<span style="color: #999;">%s</span>',
+				'<span class="qwl-lang-default">%s</span>',
 				esc_html__( '—', 'quick-wp-lang' )
 			);
 		} else {
@@ -328,7 +334,7 @@ class Admin_Hooks {
 	 * @return array<string, string> Modified sortable columns.
 	 */
 	public function make_language_column_sortable( array $columns ): array {
-		$columns['qwl_language'] = 'qwl_language';
+		$columns['quick_wp_lang_language'] = 'quick_wp_lang_language';
 		return $columns;
 	}
 
@@ -354,13 +360,26 @@ class Admin_Hooks {
 
 		$orderby = $query->get( 'orderby' );
 
-		if ( 'qwl_language' === $orderby ) {
+		if ( 'quick_wp_lang_language' === $orderby ) {
 			$should_modify = true;
 		}
 
 		if ( $should_modify ) {
-			$query->set( 'meta_key', META_KEY_LANGUAGE );
-			$query->set( 'orderby', 'meta_value' );
+			$query->set(
+				'meta_query',
+				array(
+					'relation'                => 'OR',
+					'qwl_language_exists'     => array(
+						'key'     => META_KEY_LANGUAGE,
+						'compare' => 'EXISTS',
+					),
+					'qwl_language_not_exists' => array(
+						'key'     => META_KEY_LANGUAGE,
+						'compare' => 'NOT EXISTS',
+					),
+				)
+			);
+			$query->set( 'orderby', 'qwl_language_exists' );
 		}
 	}
 
@@ -382,21 +401,25 @@ class Admin_Hooks {
 		$allowed_screens = array( 'dashboard', 'edit-post', 'edit-page', 'post', 'page' );
 
 		if ( in_array( $screen->id, $allowed_screens, true ) || strpos( $screen->id, 'edit-' ) === 0 ) {
-			wp_add_inline_script(
-				'jquery',
-				"
-				jQuery(function($) {
-					$(document).on('click', '.notice[data-notice-id] .notice-dismiss', function() {
-						var noticeId = $(this).closest('.notice').data('notice-id');
-						$.post(ajaxurl, {
-							action: 'qwl_dismiss_notice',
-							notice_id: noticeId,
-							nonce: '" . wp_create_nonce( 'qwl_dismiss_notice' ) . "'
-						});
-					});
-				});
-				"
-			);
+			wp_add_inline_style( 'wp-admin', '.qwl-lang-default { color: #999; }' );
+
+			add_action( 'admin_print_footer_scripts', array( $this, 'render_notice_dismiss_script' ) );
 		}
+	}
+
+	/**
+	 * Render the notice dismiss script in the admin footer.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function render_notice_dismiss_script(): void {
+		$nonce = esc_js( wp_create_nonce( 'quick_wp_lang_dismiss_notice' ) );
+
+		printf(
+			'<script>document.addEventListener("click",function(e){if(!e.target.classList.contains("notice-dismiss")){return;}var notice=e.target.closest(".notice[data-notice-id]");if(!notice){return;}var f=new FormData();f.append("action","quick_wp_lang_dismiss_notice");f.append("notice_id",notice.getAttribute("data-notice-id"));f.append("nonce","%s");window.fetch(window.ajaxurl,{method:"POST",body:f});});</script>',
+			$nonce // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped with esc_js() above.
+		);
 	}
 }

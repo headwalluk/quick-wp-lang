@@ -1,9 +1,9 @@
 # Project Tracker — Quick WP Lang
 
-**Version:** 1.0.0 🎉  
-**Last Updated:** 12 February 2026  
+**Version:** 1.1.0 🎉  
+**Last Updated:** 16 February 2026  
 **Current Phase:** Production Ready  
-**Overall Progress:** 95%
+**Overall Progress:** 100% (M1-M4: 25/25 tasks complete)
 
 ---
 
@@ -46,9 +46,9 @@
 ### R3 — Settings Page (Optional, Milestone 2)
 
 - [x] Admin settings page under **Settings → Content Language**.
-- [ ] Option: select which post types display the meta box (filter available, UI pending).
+- [x] Option: select which post types display the meta box.
 - [x] Option: curate/restrict the available language list.
-- [ ] Option: toggle `Content-Language` HTTP header on/off (always enabled in v0.1.0).
+- [x] Option: toggle `Content-Language` HTTP header on/off.
 
 ### R4 — General / Non-Functional
 
@@ -58,7 +58,7 @@
 - [x] Follows WordPress Coding Standards (phpcs clean).
 - [x] PHP 8.0+ with type hints.
 - [x] Namespaced under `Quick_WP_Lang`.
-- [ ] Uninstall cleanup: remove all `_qwl_language` meta on uninstall.
+- [x] Uninstall cleanup: remove all `_qwl_language` meta on uninstall.
 
 ---
 
@@ -81,23 +81,45 @@
 
 | # | Task | Status |
 |---|------|--------|
-| 2.1 | Settings page — post type selection | 🔄 Filter available, UI pending |
+| 2.1 | Settings page — post type selection | ✅ Complete |
 | 2.2 | Settings page — language list curation | ✅ Complete |
-| 2.3 | Settings page — header toggle | 🔄 Pending |
+| 2.3 | Settings page — header toggle | ✅ Complete |
 | 2.4 | Language column in posts list table | ✅ Complete |
 | 2.5 | Admin notice when no languages are enabled | ✅ Complete |
 | 2.6 | Empty state messaging on settings page | ✅ Complete |
-| 2.7 | Uninstall routine | 🔄 Pending |
+| 2.7 | Uninstall routine | ✅ Complete |
 
-### Milestone 3 — Future Enhancements
+### Milestone 3 — Settings Page Polish (v1.1.0)
 
 | # | Task | Status |
 |---|------|--------|
-| 3.1 | Post count next to each language on settings page | 🔄 Planned |
-| 3.2 | Quick Edit support for language selection | 🔄 Planned |
-| 3.3 | Improved meta box styling with icon | 🔄 Planned |
-| 3.4 | First-run experience with redirect to settings | 🔄 Planned |
-| 3.5 | Enhanced keyboard accessibility | 🔄 Planned |
+| 3.1 | Disable site default language checkbox + italic "(site default language)" note | ✅ Complete |
+| 3.2 | Search/filter textbox above checkbox list (JS keyup filter by name or locale code) | ✅ Complete |
+| 3.3 | Show locale code next to language name in lighter text (e.g. "German `de_DE`") | ✅ Complete |
+| 3.4 | Enabled count indicator — "X of Y languages enabled" summary | ✅ Complete |
+| 3.5 | Group enabled languages at top of list (float checked above unchecked) | ✅ Complete |
+
+### Milestone 4 — Fix PHPCS Prefix Violations (v1.1.1)
+
+| # | Task | Status |
+|---|------|--------|
+| 4.1 | Review and extend namespace/function prefixes to avoid "too short" warnings | ✅ Complete |
+| 4.2 | Update constants to use longer prefix (e.g. `QUICK_WP_LANG_VERSION` instead of `QWL_VERSION`) | ✅ Complete |
+| 4.3 | Update hook names to use longer prefix (e.g. `quick_wp_lang_languages` instead of `qwl_languages`) | ✅ Complete |
+| 4.4 | Update global function and variable names with longer prefix | ✅ Complete |
+| 4.5 | Run phpcs and verify zero violations | ✅ Complete |
+
+**Note:** The "qwl" prefix is functional but WordPress Coding Standards considers 3-character prefixes too short to guarantee uniqueness. This milestone extends prefixes to reduce collision risk.
+
+### Milestone 5 — Future Enhancements
+
+| # | Task | Status |
+|---|------|--------|
+| 5.1 | Post count next to each language on settings page | 🔄 Planned |
+| 5.2 | Quick Edit support for language selection | 🔄 Planned |
+| 5.3 | Improved meta box styling with icon | 🔄 Planned |
+| 5.4 | First-run experience with redirect to settings | 🔄 Planned |
+| 5.5 | Enhanced keyboard accessibility | 🔄 Planned |
 
 ---
 
@@ -112,9 +134,6 @@
 ### Pending
 
 - Add bulk edit support for language assignment
-- Implement settings toggle for `Content-Language` HTTP header (currently always enabled)
-- Implement settings UI for post type selection (filter exists, UI pending)
-- Uninstall routine to clean up post meta and options
 
 ### Future Enhancements
 

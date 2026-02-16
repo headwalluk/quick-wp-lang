@@ -1,12 +1,12 @@
 # Quick WP Lang
 
-![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![WordPress](https://img.shields.io/badge/wordpress-6.0%2B-blue.svg)
 ![PHP](https://img.shields.io/badge/php-8.0%2B-purple.svg)
 ![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)
 ![HPOS Compatible](https://img.shields.io/badge/WooCommerce-HPOS%20Compatible-96588a.svg)
 
-**Version:** 1.0.1  
+**Version:** 1.1.0  
 **Requires WordPress:** 6.0+  
 **Requires PHP:** 8.0+  
 **License:** GPL v2 or later
@@ -37,6 +37,8 @@ This is **not** a translation plugin. There is no concept of "the same content i
 
 - ✅ **Simple Meta Box** — Select language from a curated list of 50+ common languages
 - ✅ **Settings Page** — Enable only the languages you need (reduces clutter)
+- ✅ **Language Search** — Filter available languages by name or code on settings page
+- ✅ **Smart Grouping** — Enabled languages automatically float to top of list
 - ✅ **Radio Button UI** — Clean, accessible interface in the post editor sidebar
 - ✅ **SEO Optimized** — Automatically adjusts `lang` attribute, hreflang tags, and `og:locale`
 - ✅ **SEO Plugin Compatible** — Detects Yoast SEO, Rank Math, and All in One SEO
@@ -94,23 +96,23 @@ WordPress uses `en_GB`, BCP 47 uses `en-GB`. The plugin automatically converts v
 
 ### Filters
 
-#### `qwl_languages`
+#### `quick_wp_lang_languages`
 
 Modify the available languages list.
 
 ```php
-add_filter( 'qwl_languages', function( $languages ) {
+add_filter( 'quick_wp_lang_languages', function( $languages ) {
     $languages['cy'] = __( 'Welsh', 'quick-wp-lang' );
     return $languages;
 } );
 ```
 
-#### `qwl_supported_post_types`
+#### `quick_wp_lang_supported_post_types`
 
-Modify which post types show the meta box.
+Modify which post types show the meta box and language column.
 
 ```php
-add_filter( 'qwl_supported_post_types', function( $post_types ) {
+add_filter( 'quick_wp_lang_supported_post_types', function( $post_types ) {
     unset( $post_types['attachment'] );
     return $post_types;
 } );

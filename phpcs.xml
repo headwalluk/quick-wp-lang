@@ -16,7 +16,7 @@
 	<!-- Arguments -->
 	<arg value="sp"/>
 	<arg name="basepath" value="."/>
-	<arg name="colors"/>
+	<arg name="no-colors"/>
 	<arg name="extensions" value="php"/>
 	<arg name="parallel" value="8"/>
 	
@@ -30,7 +30,6 @@
 		<properties>
 			<property name="prefixes" type="array">
 				<element value="quick_wp_lang"/>
-				<element value="qwl"/>
 				<element value="Quick_WP_Lang"/>
 			</property>
 		</properties>

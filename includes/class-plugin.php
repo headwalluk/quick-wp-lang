@@ -77,7 +77,7 @@ class Plugin {
 			add_action( 'save_post', array( $this->get_admin_hooks(), 'save_meta_box' ), 10, 2 );
 			add_action( 'admin_notices', array( $this->get_admin_hooks(), 'show_no_languages_notice' ) );
 			add_action( 'admin_enqueue_scripts', array( $this->get_admin_hooks(), 'enqueue_admin_assets' ) );
-			add_action( 'wp_ajax_qwl_dismiss_notice', array( $this->get_admin_hooks(), 'ajax_dismiss_notice' ) );
+			add_action( 'wp_ajax_quick_wp_lang_dismiss_notice', array( $this->get_admin_hooks(), 'ajax_dismiss_notice' ) );
 
 			// Add language column to post types.
 			$this->register_language_columns();
@@ -88,7 +88,12 @@ class Plugin {
 			add_filter( 'language_attributes', array( $this->get_public_hooks(), 'filter_language_attributes' ), PRIORITY_LANGUAGE_ATTRIBUTES );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_hreflang_tags' ), PRIORITY_WP_HEAD );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_og_locale' ), PRIORITY_WP_HEAD );
-			add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
+
+			// Only send Content-Language header if enabled in settings.
+			$header_enabled = get_option( OPT_ENABLE_CONTENT_LANGUAGE_HEADER, true );
+			if ( rest_sanitize_boolean( $header_enabled ) ) {
+				add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
+			}
 		}
 	}
 
@@ -103,7 +108,7 @@ class Plugin {
 		load_plugin_textdomain(
 			'quick-wp-lang',
 			false,
-			dirname( plugin_basename( QWL_PLUGIN_FILE ) ) . '/languages'
+			dirname( plugin_basename( QUICK_WP_LANG_PLUGIN_FILE ) ) . '/languages'
 		);
 	}
 
@@ -115,7 +120,13 @@ class Plugin {
 	 * @return void
 	 */
 	private function register_language_columns(): void {
-		$post_types = get_post_types( array( 'public' => true ), 'names' );
+		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
+		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+
+		// If option is empty, default to post and page.
+		if ( empty( $enabled_post_types ) ) {
+			$enabled_post_types = array( 'post', 'page' );
+		}
 
 		/**
 		 * Filter the post types that support the language column.
@@ -124,7 +135,7 @@ class Plugin {
 		 *
 		 * @param array<string> $post_types Array of post type names.
 		 */
-		$post_types = apply_filters( 'qwl_supported_post_types', $post_types );
+		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $enabled_post_types );
 
 		if ( ! is_array( $post_types ) ) {
 			return;
