@@ -5,41 +5,58 @@
  * @since 1.1.0
  */
 
-(function() {
+( function() {
 	'use strict';
 
-	document.addEventListener('DOMContentLoaded', function() {
-		const searchBox = document.getElementById('qwl-language-search');
-		if (!searchBox) {
+	/**
+	 * Initialize search functionality when DOM is ready.
+	 */
+	document.addEventListener( 'DOMContentLoaded', function() {
+		const searchInput = document.getElementById( 'qwl-language-search' );
+		const clearButton = document.getElementById( 'qwl-language-search-clear' );
+		const languageItems = document.querySelectorAll( '.qwl-language-item' );
+
+		if ( ! searchInput || ! clearButton || languageItems.length === 0 ) {
 			return;
 		}
 
-		const languageCheckboxes = document.querySelectorAll('.qwl-language-item');
+		/**
+		 * Filter languages based on search query.
+		 *
+		 * @param {string} query Search query string.
+		 */
+		function filterLanguages( query ) {
+			const normalizedQuery = query.toLowerCase().trim();
 
-		searchBox.addEventListener('keyup', function() {
-			const searchTerm = this.value.toLowerCase().trim();
+			languageItems.forEach( function( item ) {
+				const name = item.getAttribute( 'data-name' ) || '';
+				const locale = item.getAttribute( 'data-locale' ) || '';
 
-			languageCheckboxes.forEach(function(item) {
-				const languageName = item.getAttribute('data-name').toLowerCase();
-				const localeCode = item.getAttribute('data-locale').toLowerCase();
-				const matches = languageName.includes(searchTerm) || localeCode.includes(searchTerm);
+				const nameMatch = name.toLowerCase().includes( normalizedQuery );
+				const localeMatch = locale.toLowerCase().includes( normalizedQuery );
 
-				if (matches || searchTerm === '') {
+				if ( normalizedQuery === '' || nameMatch || localeMatch ) {
 					item.style.display = '';
 				} else {
 					item.style.display = 'none';
 				}
-			});
-		});
-
-		// Clear button functionality
-		const clearButton = document.getElementById('qwl-language-search-clear');
-		if (clearButton) {
-			clearButton.addEventListener('click', function() {
-				searchBox.value = '';
-				searchBox.dispatchEvent(new Event('keyup'));
-				searchBox.focus();
-			});
+			} );
 		}
-	});
-})();
+
+		/**
+		 * Clear search input and reset filter.
+		 */
+		function clearSearch() {
+			searchInput.value = '';
+			filterLanguages( '' );
+			searchInput.focus();
+		}
+
+		// Attach event listeners.
+		searchInput.addEventListener( 'keyup', function() {
+			filterLanguages( this.value );
+		} );
+
+		clearButton.addEventListener( 'click', clearSearch );
+	} );
+}() );
