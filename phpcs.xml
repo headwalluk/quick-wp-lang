@@ -30,7 +30,6 @@
 		<properties>
 			<property name="prefixes" type="array">
 				<element value="quick_wp_lang"/>
-				<element value="qwl"/>
 				<element value="Quick_WP_Lang"/>
 			</property>
 		</properties>

@@ -19,22 +19,22 @@
 defined( 'ABSPATH' ) || die();
 
 // Define plugin constants.
-define( 'QWL_VERSION', '1.0.1' );
-define( 'QWL_PLUGIN_FILE', __FILE__ );
-define( 'QWL_PLUGIN_DIR', __DIR__ );
-define( 'QWL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'QUICK_WP_LANG_VERSION', '1.0.1' );
+define( 'QUICK_WP_LANG_PLUGIN_FILE', __FILE__ );
+define( 'QUICK_WP_LANG_PLUGIN_DIR', __DIR__ );
+define( 'QUICK_WP_LANG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 // Load constants.
-require_once QWL_PLUGIN_DIR . '/constants.php';
+require_once QUICK_WP_LANG_PLUGIN_DIR . '/constants.php';
 
 // Load helper functions.
-require_once QWL_PLUGIN_DIR . '/includes/functions-languages.php';
+require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/functions-languages.php';
 
 // Load core classes.
-require_once QWL_PLUGIN_DIR . '/includes/class-plugin.php';
-require_once QWL_PLUGIN_DIR . '/includes/class-settings.php';
-require_once QWL_PLUGIN_DIR . '/includes/class-admin-hooks.php';
-require_once QWL_PLUGIN_DIR . '/includes/class-public-hooks.php';
+require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-plugin.php';
+require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-settings.php';
+require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-admin-hooks.php';
+require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-public-hooks.php';
 
 /**
  * Initialize and run the plugin.
@@ -43,9 +43,9 @@ require_once QWL_PLUGIN_DIR . '/includes/class-public-hooks.php';
  *
  * @return void
  */
-function qwl_plugin_run() {
-	global $qwl_plugin_instance;
-	$qwl_plugin_instance = new \Quick_WP_Lang\Plugin();
-	$qwl_plugin_instance->run();
+function quick_wp_lang_plugin_run() {
+	global $quick_wp_lang_plugin_instance;
+	$quick_wp_lang_plugin_instance = new \Quick_WP_Lang\Plugin();
+	$quick_wp_lang_plugin_instance->run();
 }
-qwl_plugin_run();
+quick_wp_lang_plugin_run();

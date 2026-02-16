@@ -25,7 +25,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  * Removes all options and post meta created by the plugin.
  * This ensures a clean uninstall with no database residue.
  */
-function qwl_uninstall_cleanup() {
+function quick_wp_lang_uninstall_cleanup() {
 	global $wpdb;
 
 	// Remove plugin options.
@@ -47,4 +47,4 @@ function qwl_uninstall_cleanup() {
 }
 
 // Execute cleanup.
-qwl_uninstall_cleanup();
+quick_wp_lang_uninstall_cleanup();

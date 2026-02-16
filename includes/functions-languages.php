@@ -87,7 +87,7 @@ function get_available_languages_list(): array {
 	 *
 	 * @param array<string, string> $languages Array of locale => language name pairs.
 	 */
-	$languages = apply_filters( 'qwl_languages', $languages );
+	$languages = apply_filters( 'quick_wp_lang_languages', $languages );
 
 	return is_array( $languages ) ? $languages : array();
 }

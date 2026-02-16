@@ -66,7 +66,7 @@ class Settings {
 			'qwl-settings-search',
 			plugins_url( 'assets/admin/settings-search.js', __DIR__ ),
 			array(),
-			QWL_VERSION,
+			QUICK_WP_LANG_VERSION,
 			true
 		);
 	}

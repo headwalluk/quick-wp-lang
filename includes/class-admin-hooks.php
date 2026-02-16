@@ -31,7 +31,7 @@ class Admin_Hooks {
 		$post_types = $this->get_supported_post_types();
 
 		add_meta_box(
-			'qwl_language_meta_box',
+			'quick_wp_lang_language_meta_box',
 			__( 'Content Language', 'quick-wp-lang' ),
 			array( $this, 'render_meta_box' ),
 			$post_types,
@@ -71,7 +71,7 @@ class Admin_Hooks {
 
 		// Site default option.
 		printf(
-			'<label><input type="radio" name="qwl_language" value="%s"%s /> %s</label><br />',
+			'<label><input type="radio" name="quick_wp_lang_language" value="%s"%s /> %s</label><br />',
 			esc_attr( DEF_LANGUAGE ),
 			checked( $current_language, DEF_LANGUAGE, false ),
 			esc_html__( 'Site Default', 'quick-wp-lang' )
@@ -80,7 +80,7 @@ class Admin_Hooks {
 		// Enabled language options.
 		foreach ( $languages as $locale => $name ) {
 			printf(
-				'<label><input type="radio" name="qwl_language" value="%s"%s /> %s</label><br />',
+				'<label><input type="radio" name="quick_wp_lang_language" value="%s"%s /> %s</label><br />',
 				esc_attr( $locale ),
 				checked( $current_language, $locale, false ),
 				esc_html( $name )
@@ -137,7 +137,7 @@ class Admin_Hooks {
 
 		if ( $should_save ) {
 			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
-			$language = isset( $_POST['qwl_language'] ) ? sanitize_text_field( wp_unslash( $_POST['qwl_language'] ) ) : DEF_LANGUAGE;
+			$language = isset( $_POST['quick_wp_lang_language'] ) ? sanitize_text_field( wp_unslash( $_POST['quick_wp_lang_language'] ) ) : DEF_LANGUAGE;
 			// phpcs:enable
 
 			// Validate language is in our list or is the default.
@@ -174,7 +174,7 @@ class Admin_Hooks {
 		 *
 		 * @param array<string> $post_types Array of post type names.
 		 */
-		$post_types = apply_filters( 'qwl_supported_post_types', $post_types );
+		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $post_types );
 
 		return is_array( $post_types ) ? $post_types : array();
 	}
@@ -236,7 +236,7 @@ class Admin_Hooks {
 		// Check nonce.
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
-		if ( ! wp_verify_nonce( $nonce, 'qwl_dismiss_notice' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'quick_wp_lang_dismiss_notice' ) ) {
 			$should_dismiss = false;
 		}
 
@@ -279,7 +279,7 @@ class Admin_Hooks {
 		// Insert language column before date column.
 		foreach ( $columns as $key => $label ) {
 			if ( 'date' === $key ) {
-				$result['qwl_language'] = __( 'Language', 'quick-wp-lang' );
+				$result['quick_wp_lang_language'] = __( 'Language', 'quick-wp-lang' );
 			}
 			$result[ $key ] = $label;
 		}
@@ -298,7 +298,7 @@ class Admin_Hooks {
 	 * @return void
 	 */
 	public function render_language_column( string $column_name, int $post_id ): void {
-		if ( 'qwl_language' !== $column_name ) {
+		if ( 'quick_wp_lang_language' !== $column_name ) {
 			return;
 		}
 
@@ -328,7 +328,7 @@ class Admin_Hooks {
 	 * @return array<string, string> Modified sortable columns.
 	 */
 	public function make_language_column_sortable( array $columns ): array {
-		$columns['qwl_language'] = 'qwl_language';
+		$columns['quick_wp_lang_language'] = 'quick_wp_lang_language';
 		return $columns;
 	}
 
@@ -354,7 +354,7 @@ class Admin_Hooks {
 
 		$orderby = $query->get( 'orderby' );
 
-		if ( 'qwl_language' === $orderby ) {
+		if ( 'quick_wp_lang_language' === $orderby ) {
 			$should_modify = true;
 		}
 
@@ -389,9 +389,9 @@ class Admin_Hooks {
 					$(document).on('click', '.notice[data-notice-id] .notice-dismiss', function() {
 						var noticeId = $(this).closest('.notice').data('notice-id');
 						$.post(ajaxurl, {
-							action: 'qwl_dismiss_notice',
+							action: 'quick_wp_lang_dismiss_notice',
 							notice_id: noticeId,
-							nonce: '" . wp_create_nonce( 'qwl_dismiss_notice' ) . "'
+							nonce: '" . wp_create_nonce( 'quick_wp_lang_dismiss_notice' ) . "'
 						});
 					});
 				});
