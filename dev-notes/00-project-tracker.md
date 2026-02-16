@@ -3,7 +3,7 @@
 **Version:** 1.0.0 🎉  
 **Last Updated:** 16 February 2026  
 **Current Phase:** Production Ready  
-**Overall Progress:** 96% (M1-M4: 24/25 tasks complete)
+**Overall Progress:** 100% (M1-M4: 25/25 tasks complete)
 
 ---
 
@@ -46,7 +46,7 @@
 ### R3 — Settings Page (Optional, Milestone 2)
 
 - [x] Admin settings page under **Settings → Content Language**.
-- [ ] Option: select which post types display the meta box (filter available, UI pending).
+- [x] Option: select which post types display the meta box.
 - [x] Option: curate/restrict the available language list.
 - [x] Option: toggle `Content-Language` HTTP header on/off.
 
@@ -58,7 +58,7 @@
 - [x] Follows WordPress Coding Standards (phpcs clean).
 - [x] PHP 8.0+ with type hints.
 - [x] Namespaced under `Quick_WP_Lang`.
-- [ ] Uninstall cleanup: remove all `_qwl_language` meta on uninstall.
+- [x] Uninstall cleanup: remove all `_qwl_language` meta on uninstall.
 
 ---
 
@@ -81,7 +81,7 @@
 
 | # | Task | Status |
 |---|------|--------|
-| 2.1 | Settings page — post type selection | 🔄 Filter available, UI pending |
+| 2.1 | Settings page — post type selection | ✅ Complete |
 | 2.2 | Settings page — language list curation | ✅ Complete |
 | 2.3 | Settings page — header toggle | ✅ Complete |
 | 2.4 | Language column in posts list table | ✅ Complete |
@@ -134,9 +134,6 @@
 ### Pending
 
 - Add bulk edit support for language assignment
-- Implement settings toggle for `Content-Language` HTTP header (currently always enabled)
-- Implement settings UI for post type selection (filter exists, UI pending)
-- Uninstall routine to clean up post meta and options
 
 ### Future Enhancements
 
