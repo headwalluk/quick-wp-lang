@@ -30,6 +30,7 @@ function quick_wp_lang_uninstall_cleanup() {
 
 	// Remove plugin options.
 	delete_option( 'qwl_enabled_languages' );
+	delete_option( 'qwl_enabled_post_types' );
 	delete_option( 'qwl_enable_content_language_header' );
 	delete_option( 'qwl_dismissed_notices' );
 
@@ -42,8 +43,6 @@ function quick_wp_lang_uninstall_cleanup() {
 		)
 	);
 
-	// Clear any cached data.
-	wp_cache_flush();
 }
 
 // Execute cleanup.

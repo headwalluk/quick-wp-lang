@@ -120,7 +120,13 @@ class Plugin {
 	 * @return void
 	 */
 	private function register_language_columns(): void {
-		$post_types = get_post_types( array( 'public' => true ), 'names' );
+		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
+		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+
+		// If option is empty, default to post and page.
+		if ( empty( $enabled_post_types ) ) {
+			$enabled_post_types = array( 'post', 'page' );
+		}
 
 		/**
 		 * Filter the post types that support the language column.
@@ -129,7 +135,7 @@ class Plugin {
 		 *
 		 * @param array<string> $post_types Array of post type names.
 		 */
-		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $post_types );
+		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $enabled_post_types );
 
 		if ( ! is_array( $post_types ) ) {
 			return;

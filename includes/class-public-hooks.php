@@ -83,6 +83,7 @@ class Public_Hooks {
 	 */
 	public function output_og_locale(): void {
 		$should_output = false;
+		$language      = '';
 
 		// Skip if a known SEO plugin is active.
 		if ( ! $this->is_seo_plugin_active() ) {
@@ -113,7 +114,11 @@ class Public_Hooks {
 
 		if ( ! empty( $language ) ) {
 			$bcp47_language = $this->locale_to_bcp47( $language );
-			header( 'Content-Language: ' . $bcp47_language );
+
+			// Validate BCP 47 format before sending header.
+			if ( preg_match( '/^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/', $bcp47_language ) ) {
+				header( 'Content-Language: ' . $bcp47_language );
+			}
 		}
 	}
 

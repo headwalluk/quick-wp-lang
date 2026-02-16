@@ -30,10 +30,6 @@ const SETTINGS_PAGE_SLUG    = 'qwl-settings';
 const SETTINGS_OPTION_GROUP = 'qwl_settings_group';
 const SETTINGS_SECTION_ID   = 'qwl_languages_section';
 
-// Nonce for settings page.
-const NONCE_ACTION_SETTINGS = 'qwl_settings_save';
-const NONCE_NAME_SETTINGS   = 'qwl_settings_nonce';
-
 // Admin notice options.
 const OPT_DISMISSED_NOTICES = 'qwl_dismissed_notices';
 

@@ -18,6 +18,6 @@ defined( 'ABSPATH' ) || die();
  * @return Plugin The plugin instance.
  */
 function get_plugin_instance(): Plugin {
-	global $qwl_plugin_instance;
-	return $qwl_plugin_instance;
+	global $quick_wp_lang_plugin_instance;
+	return $quick_wp_lang_plugin_instance;
 }

@@ -69,6 +69,16 @@ class Settings {
 			QUICK_WP_LANG_VERSION,
 			true
 		);
+
+		wp_add_inline_style(
+			'wp-admin',
+			'.qwl-search-wrap { margin-bottom: 12px; }' .
+			'.qwl-search-wrap input[type="text"] { width: 100%; max-width: 400px; }' .
+			'.qwl-search-wrap .button { vertical-align: top; }' .
+			'.qwl-language-count { margin: 0 0 12px 0; font-weight: 600; }' .
+			'.qwl-language-item code { color: #666; font-size: 0.9em; }' .
+			'.qwl-field-help { margin-top: 12px; }'
+		);
 	}
 
 	/**
@@ -117,14 +127,6 @@ class Settings {
 		);
 
 		add_settings_field(
-			'qwl_enabled_languages_field',
-			__( 'Enable Languages', 'quick-wp-lang' ),
-			array( $this, 'render_languages_field' ),
-			SETTINGS_PAGE_SLUG,
-			SETTINGS_SECTION_ID
-		);
-
-		add_settings_field(
 			'qwl_enable_content_language_header_field',
 			__( 'Content-Language Header', 'quick-wp-lang' ),
 			array( $this, 'render_header_toggle_field' ),
@@ -136,6 +138,14 @@ class Settings {
 			'qwl_enabled_post_types_field',
 			__( 'Enable for Post Types', 'quick-wp-lang' ),
 			array( $this, 'render_post_types_field' ),
+			SETTINGS_PAGE_SLUG,
+			SETTINGS_SECTION_ID
+		);
+
+		add_settings_field(
+			'qwl_enabled_languages_field',
+			__( 'Enable Languages', 'quick-wp-lang' ),
+			array( $this, 'render_languages_field' ),
 			SETTINGS_PAGE_SLUG,
 			SETTINGS_SECTION_ID
 		);
@@ -201,14 +211,14 @@ class Settings {
 
 		// Search box.
 		printf(
-			'<div style="margin-bottom: 12px;"><input type="text" id="qwl-language-search" placeholder="%s" style="width: 100%%; max-width: 400px;" /> <button type="button" id="qwl-language-search-clear" class="button" style="vertical-align: top;">%s</button></div>',
+			'<div class="qwl-search-wrap"><input type="text" id="qwl-language-search" placeholder="%s" /> <button type="button" id="qwl-language-search-clear" class="button">%s</button></div>',
 			esc_attr__( 'Search languages by name or code...', 'quick-wp-lang' ),
 			esc_html__( 'Clear', 'quick-wp-lang' )
 		);
 
 		// Enabled count indicator.
 		printf(
-			'<p style="margin: 0 0 12px 0; font-weight: 600;">%s</p>',
+			'<p class="qwl-language-count">%s</p>',
 			sprintf(
 				/* translators: 1: Number of enabled languages, 2: Total number of available languages. */
 				esc_html__( '%1$d of %2$d languages enabled', 'quick-wp-lang' ),
@@ -228,7 +238,7 @@ class Settings {
 			$suffix         = $is_site_locale ? ' <em>' . esc_html__( '(site default language)', 'quick-wp-lang' ) . '</em>' : '';
 
 			printf(
-				'<div class="qwl-language-item" data-name="%s" data-locale="%s"><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s <code style="color: #666; font-size: 0.9em;">%s</code>%s</label></div>',
+				'<div class="qwl-language-item" data-name="%s" data-locale="%s"><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s <code>%s</code>%s</label></div>',
 				esc_attr( $name ),
 				esc_attr( $locale ),
 				esc_attr( $field_id ),
@@ -247,7 +257,7 @@ class Settings {
 
 		// Empty state help text.
 		printf(
-			'<p class="description" style="margin-top: 12px;">%s</p>',
+			'<p class="description qwl-field-help">%s</p>',
 			esc_html__( 'Select at least one language to enable language selection in your posts and pages.', 'quick-wp-lang' )
 		);
 	}
@@ -288,9 +298,9 @@ class Settings {
 		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
 		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
 
-		// If option is empty, default to all public post types.
+		// If option is empty, default to post and page.
 		if ( empty( $enabled_post_types ) ) {
-			$enabled_post_types = array_keys( $all_post_types );
+			$enabled_post_types = array( 'post', 'page' );
 		}
 
 		printf( '<fieldset>' );
@@ -301,7 +311,7 @@ class Settings {
 			$checked  = in_array( $post_type_name, $enabled_post_types, true );
 
 			printf(
-				'<div><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s /> %s <code style="color: #666; font-size: 0.9em;">%s</code></label></div>',
+				'<div><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s /> %s <code>%s</code></label></div>',
 				esc_attr( $field_id ),
 				esc_attr( OPT_ENABLED_POST_TYPES ),
 				esc_attr( $field_id ),
@@ -315,7 +325,7 @@ class Settings {
 		printf( '</fieldset>' );
 
 		printf(
-			'<p class="description" style="margin-top: 12px;">%s</p>',
+			'<p class="description qwl-field-help">%s</p>',
 			esc_html__( 'Select which post types should display the language meta box. If no post types are selected, all public post types will be enabled by default.', 'quick-wp-lang' )
 		);
 	}

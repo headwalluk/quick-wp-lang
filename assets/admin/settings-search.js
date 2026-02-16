@@ -53,7 +53,7 @@
 		}
 
 		// Attach event listeners.
-		searchInput.addEventListener( 'keyup', function() {
+		searchInput.addEventListener( 'input', function() {
 			filterLanguages( this.value );
 		} );
 

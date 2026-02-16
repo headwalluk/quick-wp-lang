@@ -96,23 +96,23 @@ WordPress uses `en_GB`, BCP 47 uses `en-GB`. The plugin automatically converts v
 
 ### Filters
 
-#### `qwl_languages`
+#### `quick_wp_lang_languages`
 
 Modify the available languages list.
 
 ```php
-add_filter( 'qwl_languages', function( $languages ) {
+add_filter( 'quick_wp_lang_languages', function( $languages ) {
     $languages['cy'] = __( 'Welsh', 'quick-wp-lang' );
     return $languages;
 } );
 ```
 
-#### `qwl_supported_post_types`
+#### `quick_wp_lang_supported_post_types`
 
-Modify which post types show the meta box.
+Modify which post types show the meta box and language column.
 
 ```php
-add_filter( 'qwl_supported_post_types', function( $post_types ) {
+add_filter( 'quick_wp_lang_supported_post_types', function( $post_types ) {
     unset( $post_types['attachment'] );
     return $post_types;
 } );

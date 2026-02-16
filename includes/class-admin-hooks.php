@@ -168,9 +168,9 @@ class Admin_Hooks {
 		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
 		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
 
-		// If option is empty, default to all public post types.
+		// If option is empty, default to post and page.
 		if ( empty( $enabled_post_types ) ) {
-			$enabled_post_types = get_post_types( array( 'public' => true ), 'names' );
+			$enabled_post_types = array( 'post', 'page' );
 		}
 
 		/**
@@ -313,7 +313,7 @@ class Admin_Hooks {
 
 		if ( empty( $language ) ) {
 			printf(
-				'<span style="color: #999;">%s</span>',
+				'<span class="qwl-lang-default">%s</span>',
 				esc_html__( '—', 'quick-wp-lang' )
 			);
 		} else {
@@ -365,8 +365,21 @@ class Admin_Hooks {
 		}
 
 		if ( $should_modify ) {
-			$query->set( 'meta_key', META_KEY_LANGUAGE );
-			$query->set( 'orderby', 'meta_value' );
+			$query->set(
+				'meta_query',
+				array(
+					'relation'                => 'OR',
+					'qwl_language_exists'     => array(
+						'key'     => META_KEY_LANGUAGE,
+						'compare' => 'EXISTS',
+					),
+					'qwl_language_not_exists' => array(
+						'key'     => META_KEY_LANGUAGE,
+						'compare' => 'NOT EXISTS',
+					),
+				)
+			);
+			$query->set( 'orderby', 'qwl_language_exists' );
 		}
 	}
 
@@ -388,21 +401,25 @@ class Admin_Hooks {
 		$allowed_screens = array( 'dashboard', 'edit-post', 'edit-page', 'post', 'page' );
 
 		if ( in_array( $screen->id, $allowed_screens, true ) || strpos( $screen->id, 'edit-' ) === 0 ) {
-			wp_add_inline_script(
-				'jquery',
-				"
-				jQuery(function($) {
-					$(document).on('click', '.notice[data-notice-id] .notice-dismiss', function() {
-						var noticeId = $(this).closest('.notice').data('notice-id');
-						$.post(ajaxurl, {
-							action: 'quick_wp_lang_dismiss_notice',
-							notice_id: noticeId,
-							nonce: '" . wp_create_nonce( 'quick_wp_lang_dismiss_notice' ) . "'
-						});
-					});
-				});
-				"
-			);
+			wp_add_inline_style( 'wp-admin', '.qwl-lang-default { color: #999; }' );
+
+			add_action( 'admin_print_footer_scripts', array( $this, 'render_notice_dismiss_script' ) );
 		}
+	}
+
+	/**
+	 * Render the notice dismiss script in the admin footer.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function render_notice_dismiss_script(): void {
+		$nonce = esc_js( wp_create_nonce( 'quick_wp_lang_dismiss_notice' ) );
+
+		printf(
+			'<script>document.addEventListener("click",function(e){if(!e.target.classList.contains("notice-dismiss")){return;}var notice=e.target.closest(".notice[data-notice-id]");if(!notice){return;}var f=new FormData();f.append("action","quick_wp_lang_dismiss_notice");f.append("notice_id",notice.getAttribute("data-notice-id"));f.append("nonce","%s");window.fetch(window.ajaxurl,{method:"POST",body:f});});</script>',
+			$nonce // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped with esc_js() above.
+		);
 	}
 }
