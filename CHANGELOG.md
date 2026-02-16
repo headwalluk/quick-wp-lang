@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-02-16
+
+### Added
+- Search/filter textbox above language checkboxes on settings page
+- Live filtering by language name or locale code (JavaScript keyup handler)
+- Locale code display next to language names (e.g., "German `de_DE`")
+- Enabled count indicator showing "X of Y languages enabled" summary
+- Automatic grouping of enabled languages at top of checkbox list
+
+### Fixed
+- Extended all prefixes from 'qwl' to 'quick_wp_lang' to resolve PHPCS short prefix warnings
+- Updated constants to use longer prefix (e.g., `QUICK_WP_LANG_VERSION` instead of `QWL_VERSION`)
+- Updated hook names with longer prefix for better uniqueness guarantees
+- All WordPress Coding Standards violations resolved
+
+### Changed
+- Improved discoverability of enabled languages in settings UI
+- Enhanced usability for sites with many available languages
+
+---
+
 ## [1.0.1] - 2026-02-12
 
 ### Changed
