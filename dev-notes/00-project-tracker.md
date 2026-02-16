@@ -3,7 +3,7 @@
 **Version:** 1.0.0 🎉  
 **Last Updated:** 16 February 2026  
 **Current Phase:** Production Ready  
-**Overall Progress:** 88% (M1-M4: 22/25 tasks complete)
+**Overall Progress:** 92% (M1-M4: 23/25 tasks complete)
 
 ---
 
@@ -97,7 +97,7 @@
 | 3.2 | Search/filter textbox above checkbox list (JS keyup filter by name or locale code) | 🔄 Pending |
 | 3.3 | Show locale code next to language name in lighter text (e.g. "German `de_DE`") | ✅ Complete |
 | 3.4 | Enabled count indicator — "X of Y languages enabled" summary | ✅ Complete |
-| 3.5 | Group enabled languages at top of list (float checked above unchecked) | 🔄 Pending |
+| 3.5 | Group enabled languages at top of list (float checked above unchecked) | ✅ Complete |
 
 ### Milestone 4 — Fix PHPCS Prefix Violations (v1.1.1)
 
