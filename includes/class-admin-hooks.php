@@ -165,7 +165,13 @@ class Admin_Hooks {
 	 * @return array<string> Array of post type names.
 	 */
 	private function get_supported_post_types(): array {
-		$post_types = get_post_types( array( 'public' => true ), 'names' );
+		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
+		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+
+		// If option is empty, default to all public post types.
+		if ( empty( $enabled_post_types ) ) {
+			$enabled_post_types = get_post_types( array( 'public' => true ), 'names' );
+		}
 
 		/**
 		 * Filter the post types that support the language meta box.
@@ -174,7 +180,7 @@ class Admin_Hooks {
 		 *
 		 * @param array<string> $post_types Array of post type names.
 		 */
-		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $post_types );
+		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $enabled_post_types );
 
 		return is_array( $post_types ) ? $post_types : array();
 	}

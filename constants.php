@@ -22,6 +22,7 @@ const DEF_LANGUAGE = ''; // Empty = site default.
 
 // Options keys.
 const OPT_ENABLED_LANGUAGES              = 'qwl_enabled_languages';
+const OPT_ENABLED_POST_TYPES             = 'qwl_enabled_post_types';
 const OPT_ENABLE_CONTENT_LANGUAGE_HEADER = 'qwl_enable_content_language_header';
 
 // Settings page identifiers.

@@ -99,6 +99,16 @@ class Settings {
 			)
 		);
 
+		register_setting(
+			SETTINGS_OPTION_GROUP,
+			OPT_ENABLED_POST_TYPES,
+			array(
+				'type'              => 'array',
+				'sanitize_callback' => array( $this, 'sanitize_enabled_post_types' ),
+				'default'           => array(),
+			)
+		);
+
 		add_settings_section(
 			SETTINGS_SECTION_ID,
 			__( 'Available Languages', 'quick-wp-lang' ),
@@ -118,6 +128,14 @@ class Settings {
 			'qwl_enable_content_language_header_field',
 			__( 'Content-Language Header', 'quick-wp-lang' ),
 			array( $this, 'render_header_toggle_field' ),
+			SETTINGS_PAGE_SLUG,
+			SETTINGS_SECTION_ID
+		);
+
+		add_settings_field(
+			'qwl_enabled_post_types_field',
+			__( 'Enable for Post Types', 'quick-wp-lang' ),
+			array( $this, 'render_post_types_field' ),
 			SETTINGS_PAGE_SLUG,
 			SETTINGS_SECTION_ID
 		);
@@ -259,6 +277,50 @@ class Settings {
 	}
 
 	/**
+	 * Render post types checkboxes field.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return void
+	 */
+	public function render_post_types_field(): void {
+		$all_post_types     = get_post_types( array( 'public' => true ), 'objects' );
+		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
+		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+
+		// If option is empty, default to all public post types.
+		if ( empty( $enabled_post_types ) ) {
+			$enabled_post_types = array_keys( $all_post_types );
+		}
+
+		printf( '<fieldset>' );
+		printf( '<legend class="screen-reader-text"><span>%s</span></legend>', esc_html__( 'Enable for Post Types', 'quick-wp-lang' ) );
+
+		foreach ( $all_post_types as $post_type_name => $post_type_obj ) {
+			$field_id = 'qwl_post_type_' . esc_attr( $post_type_name );
+			$checked  = in_array( $post_type_name, $enabled_post_types, true );
+
+			printf(
+				'<div><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s /> %s <code style="color: #666; font-size: 0.9em;">%s</code></label></div>',
+				esc_attr( $field_id ),
+				esc_attr( OPT_ENABLED_POST_TYPES ),
+				esc_attr( $field_id ),
+				esc_attr( $post_type_name ),
+				checked( $checked, true, false ),
+				esc_html( $post_type_obj->labels->name ),
+				esc_html( $post_type_name )
+			);
+		}
+
+		printf( '</fieldset>' );
+
+		printf(
+			'<p class="description" style="margin-top: 12px;">%s</p>',
+			esc_html__( 'Select which post types should display the language meta box. If no post types are selected, all public post types will be enabled by default.', 'quick-wp-lang' )
+		);
+	}
+
+	/**
 	 * Sanitize enabled languages array.
 	 *
 	 * @since 1.0.0
@@ -279,6 +341,33 @@ class Settings {
 		foreach ( $value as $locale ) {
 			if ( is_string( $locale ) && isset( $all_languages[ $locale ] ) ) {
 				$result[] = $locale;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Sanitize enabled post types array.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param mixed $value Submitted value.
+	 *
+	 * @return array<string> Sanitized array of post type names.
+	 */
+	public function sanitize_enabled_post_types( $value ): array {
+		$result = array();
+
+		if ( ! is_array( $value ) ) {
+			return $result;
+		}
+
+		$all_post_types = get_post_types( array( 'public' => true ), 'names' );
+
+		foreach ( $value as $post_type ) {
+			if ( is_string( $post_type ) && in_array( $post_type, $all_post_types, true ) ) {
+				$result[] = $post_type;
 			}
 		}
 
