@@ -191,8 +191,8 @@ class Settings {
 			sprintf(
 				/* translators: 1: Number of enabled languages, 2: Total number of available languages. */
 				esc_html__( '%1$d of %2$d languages enabled', 'quick-wp-lang' ),
-				$enabled_count,
-				$total_count
+				absint( $enabled_count ),
+				absint( $total_count )
 			)
 		);
 
