@@ -175,12 +175,25 @@ class Settings {
 		$enabled_languages = get_option( OPT_ENABLED_LANGUAGES, array() );
 		$enabled_languages = is_array( $enabled_languages ) ? $enabled_languages : array();
 		$site_locale       = get_locale();
+		$total_count       = count( $all_languages );
+		$enabled_count     = count( $enabled_languages );
 
 		// Search box.
 		printf(
 			'<div style="margin-bottom: 12px;"><input type="text" id="qwl-language-search" placeholder="%s" style="width: 100%%; max-width: 400px;" /> <button type="button" id="qwl-language-search-clear" class="button" style="vertical-align: top;">%s</button></div>',
 			esc_attr__( 'Search languages by name or code...', 'quick-wp-lang' ),
 			esc_html__( 'Clear', 'quick-wp-lang' )
+		);
+
+		// Enabled count indicator.
+		printf(
+			'<p style="margin: 0 0 12px 0; font-weight: 600;">%s</p>',
+			sprintf(
+				/* translators: 1: Number of enabled languages, 2: Total number of available languages. */
+				esc_html__( '%1$d of %2$d languages enabled', 'quick-wp-lang' ),
+				$enabled_count,
+				$total_count
+			)
 		);
 
 		printf( '<fieldset>' );
@@ -194,7 +207,7 @@ class Settings {
 			$suffix         = $is_site_locale ? ' <em>' . esc_html__( '(site default language)', 'quick-wp-lang' ) . '</em>' : '';
 
 			printf(
-				'<div class="qwl-language-item" data-name="%s" data-locale="%s"><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s%s</label></div>',
+				'<div class="qwl-language-item" data-name="%s" data-locale="%s"><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s%s /> %s <code style="color: #666; font-size: 0.9em;">%s</code>%s</label></div>',
 				esc_attr( $name ),
 				esc_attr( $locale ),
 				esc_attr( $field_id ),
@@ -204,6 +217,7 @@ class Settings {
 				checked( $checked, true, false ),
 				$disabled, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Boolean disabled attribute.
 				esc_html( $name ),
+				esc_html( $locale ),
 				$suffix // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped above.
 			);
 		}
