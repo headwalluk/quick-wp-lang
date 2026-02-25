@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-02-25
+
+### Added
+- Settings link on WordPress plugins page for quick access to plugin configuration
+
+---
+
 ## [1.1.0] - 2026-02-16
 
 ### Added

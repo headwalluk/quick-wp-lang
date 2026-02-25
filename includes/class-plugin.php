@@ -79,6 +79,9 @@ class Plugin {
 			add_action( 'admin_enqueue_scripts', array( $this->get_admin_hooks(), 'enqueue_admin_assets' ) );
 			add_action( 'wp_ajax_quick_wp_lang_dismiss_notice', array( $this->get_admin_hooks(), 'ajax_dismiss_notice' ) );
 
+			// Add Settings link to plugin actions.
+			add_filter( 'plugin_action_links_' . plugin_basename( QUICK_WP_LANG_PLUGIN_FILE ), array( $this, 'add_plugin_action_links' ) );
+
 			// Add language column to post types.
 			$this->register_language_columns();
 		}
@@ -110,6 +113,29 @@ class Plugin {
 			false,
 			dirname( plugin_basename( QUICK_WP_LANG_PLUGIN_FILE ) ) . '/languages'
 		);
+	}
+
+	/**
+	 * Add Settings link to plugin action links.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @param array<string> $links Existing action links.
+	 *
+	 * @return array<string> Modified action links.
+	 */
+	public function add_plugin_action_links( array $links ): array {
+		$settings_url = admin_url( 'options-general.php?page=' . SETTINGS_PAGE_SLUG );
+
+		$settings_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( $settings_url ),
+			esc_html__( 'Settings', 'quick-wp-lang' )
+		);
+
+		array_unshift( $links, $settings_link );
+
+		return $links;
 	}
 
 	/**
