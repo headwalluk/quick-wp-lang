@@ -256,7 +256,10 @@ class Admin_Hooks {
 			$notice_id = isset( $_POST['notice_id'] ) ? sanitize_text_field( wp_unslash( $_POST['notice_id'] ) ) : '';
 			// phpcs:enable
 
-			if ( ! empty( $notice_id ) ) {
+			// Validate against known notice IDs.
+			$valid_notice_ids = array( 'no_languages' );
+
+			if ( ! empty( $notice_id ) && in_array( $notice_id, $valid_notice_ids, true ) ) {
 				$dismissed_notices   = get_option( OPT_DISMISSED_NOTICES, array() );
 				$dismissed_notices   = is_array( $dismissed_notices ) ? $dismissed_notices : array();
 				$dismissed_notices[] = $notice_id;

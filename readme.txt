@@ -4,7 +4,7 @@ Tags: language, hreflang, seo, multilingual, locale
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,13 @@ Yes. Use the `quick_wp_lang_languages` filter to add or modify the available lan
 
 == Changelog ==
 
+= 1.2.1 - 2026-02-25 =
+* Fixed: AJAX notice dismiss now validates notice ID against allowlist
+* Fixed: Removed unreachable dead code in front-end URL helper
+
+= 1.2.0 - 2026-02-25 =
+* Added: Settings link on WordPress plugins page for quick access to plugin configuration
+
 = 1.1.0 - 2026-02-16 =
 * Added: Post type selection setting — choose which post types display the language meta box
 * Added: Search/filter textbox above language checkboxes on settings page
@@ -161,6 +168,12 @@ Yes. Use the `quick_wp_lang_languages` filter to add or modify the available lan
 * Settings class instantiated early (before `admin_init`)
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Security hardening and minor code cleanup.
+
+= 1.2.0 =
+Settings link added to the plugins page for quick access to configuration.
 
 = 1.1.0 =
 New post type selection setting, language search on settings page, and several bug fixes.

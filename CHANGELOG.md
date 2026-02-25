@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.1] - 2026-02-25
+
+### Fixed
+- AJAX notice dismiss now validates notice ID against an allowlist of known notice IDs
+- Removed unreachable dead code in front-end URL helper
+
+---
+
 ## [1.2.0] - 2026-02-25
 
 ### Added

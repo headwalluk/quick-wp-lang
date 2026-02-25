@@ -3,7 +3,7 @@
  * Plugin Name: Quick WP Lang
  * Plugin URI: https://headwall-hosting.com/plugins/alternative-language-for-wordpress-posts/
  * Description: Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Author: Paul Faulkner
@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || die();
 
 // Define plugin constants.
-define( 'QUICK_WP_LANG_VERSION', '1.2.0' );
+define( 'QUICK_WP_LANG_VERSION', '1.2.1' );
 define( 'QUICK_WP_LANG_PLUGIN_FILE', __FILE__ );
 define( 'QUICK_WP_LANG_PLUGIN_DIR', __DIR__ );
 define( 'QUICK_WP_LANG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

@@ -174,13 +174,7 @@ class Public_Hooks {
 	private function get_current_url(): string {
 		global $wp;
 
-		$result = home_url( $wp->request );
-
-		if ( is_string( $result ) ) {
-			return $result;
-		}
-
-		return '';
+		return home_url( $wp->request );
 	}
 
 	/**
