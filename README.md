@@ -47,6 +47,8 @@ This is **not** a translation plugin. There is no concept of "the same content i
 - ✅ **No Build Step** — Pure PHP, no JavaScript compilation required
 - ✅ **Translation Ready** — Fully internationalized with text domain `quick-wp-lang`
 
+![Ad-hoc content in a different language with proper SEO markup](docs/polski-tak.webp)
+
 ---
 
 ## Installation
