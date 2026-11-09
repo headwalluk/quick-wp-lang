@@ -62,10 +62,11 @@ class Public_Hooks {
 	public function output_hreflang_tags(): void {
 		foreach ( $this->get_hreflang_alternates() as $hreflang => $url ) {
 			printf(
-				'<link rel="alternate" hreflang="%s" href="%s" />' . "\n",
+				'<link rel="alternate" hreflang="%s" href="%s" />',
 				esc_attr( $hreflang ),
 				esc_url( $url )
 			);
+			echo PHP_EOL;
 		}
 	}
 
@@ -132,9 +133,10 @@ class Public_Hooks {
 
 		if ( DEFAULT_LANGUAGE !== $language ) {
 			printf(
-				'<meta property="og:locale" content="%s" />' . "\n",
+				'<meta property="og:locale" content="%s" />',
 				esc_attr( $language )
 			);
+			echo PHP_EOL;
 		}
 	}
 
