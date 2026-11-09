@@ -1,0 +1,44 @@
+/**
+ * Quick WP Lang — list tables, meta box and settings page.
+ *
+ * Logical properties only, so right-to-left admin locales style the correct side.
+ */
+
+.qwl-lang-default {
+	color: #8c8f94;
+}
+
+.qwl-meta-box-settings-link {
+	margin-block-start: 12px;
+}
+
+.qwl-meta-box-help {
+	margin-block-start: 8px;
+}
+
+.qwl-search-wrap {
+	margin-block-end: 12px;
+}
+
+.qwl-search-wrap input[type="text"] {
+	inline-size: 100%;
+	max-inline-size: 400px;
+}
+
+.qwl-search-wrap .button {
+	vertical-align: top;
+}
+
+.qwl-language-count {
+	margin-block: 0 12px;
+	font-weight: 600;
+}
+
+.qwl-language-item code {
+	color: #646970;
+	font-size: 0.9em;
+}
+
+.qwl-field-help {
+	margin-block-start: 12px;
+}

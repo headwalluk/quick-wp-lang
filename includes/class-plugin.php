@@ -8,22 +8,37 @@
 
 namespace Quick_WP_Lang;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || die();
 
 /**
- * Main plugin bootstrap class.
- *
- * Handles initialization and hook registration.
+ * Main plugin bootstrap: registers hooks and lazy-loads the admin and public handlers.
  *
  * @since 1.0.0
  */
 class Plugin {
+
+	/**
+	 * Single instance of the class.
+	 *
+	 * @since 1.3.0
+	 * @var ?Plugin
+	 */
+	private static ?Plugin $instance = null;
+
+	/**
+	 * Settings handler.
+	 *
+	 * @since 1.0.0
+	 * @var ?Settings
+	 */
+	private ?Settings $settings = null;
+
 	/**
 	 * Admin hooks handler.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @var Admin_Hooks|null
+	 * @var ?Admin_Hooks
 	 */
 	private ?Admin_Hooks $admin_hooks = null;
 
@@ -31,177 +46,127 @@ class Plugin {
 	 * Public hooks handler.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @var Public_Hooks|null
+	 * @var ?Public_Hooks
 	 */
 	private ?Public_Hooks $public_hooks = null;
 
 	/**
-	 * Settings handler.
+	 * Get the single instance of the class.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @var Settings
+	 * @since 1.3.0
+	 * @return Plugin
 	 */
-	private Settings $settings;
+	public static function instance(): Plugin {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
 
-	/**
-	 * Constructor.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct() {
-		// Settings must be instantiated early (before admin_init).
-		$this->settings = new Settings();
+		return self::$instance;
 	}
 
 	/**
-	 * Run the plugin.
-	 *
-	 * Registers all hooks and initializes components.
+	 * Register all hooks.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function run(): void {
-		// Load plugin text domain.
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
-		// Register settings.
-		$this->settings->register();
+		$this->settings = new Settings();
+		$this->settings->run();
 
-		// Register admin hooks.
 		if ( is_admin() ) {
 			add_action( 'add_meta_boxes', array( $this->get_admin_hooks(), 'register_meta_box' ) );
 			add_action( 'save_post', array( $this->get_admin_hooks(), 'save_meta_box' ), 10, 2 );
 			add_action( 'admin_notices', array( $this->get_admin_hooks(), 'show_no_languages_notice' ) );
 			add_action( 'admin_enqueue_scripts', array( $this->get_admin_hooks(), 'enqueue_admin_assets' ) );
-			add_action( 'wp_ajax_quick_wp_lang_dismiss_notice', array( $this->get_admin_hooks(), 'ajax_dismiss_notice' ) );
+			add_action( 'wp_ajax_' . AJAX_ACTION_DISMISS_NOTICE, array( $this->get_admin_hooks(), 'ajax_dismiss_notice' ) );
+			add_action( 'pre_get_posts', array( $this->get_admin_hooks(), 'sort_by_language_column' ) );
+			add_filter( 'plugin_action_links_' . QUICK_WP_LANG_BASENAME, array( $this, 'add_plugin_action_links' ) );
 
-			// Add Settings link to plugin actions.
-			add_filter( 'plugin_action_links_' . plugin_basename( QUICK_WP_LANG_PLUGIN_FILE ), array( $this, 'add_plugin_action_links' ) );
-
-			// Add language column to post types.
-			$this->register_language_columns();
-		}
-
-		// Register public hooks.
-		if ( ! is_admin() ) {
+			// On admin_init so a theme's quick_wp_lang_supported_post_types filter is already added.
+			add_action( 'admin_init', array( $this, 'register_language_columns' ) );
+		} else {
 			add_filter( 'language_attributes', array( $this->get_public_hooks(), 'filter_language_attributes' ), PRIORITY_LANGUAGE_ATTRIBUTES );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_hreflang_tags' ), PRIORITY_WP_HEAD );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_og_locale' ), PRIORITY_WP_HEAD );
-
-			// Only send Content-Language header if enabled in settings.
-			$header_enabled = get_option( OPT_ENABLE_CONTENT_LANGUAGE_HEADER, true );
-			if ( rest_sanitize_boolean( $header_enabled ) ) {
-				add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
-			}
+			add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
 		}
 	}
 
 	/**
-	 * Load plugin text domain for translations.
+	 * Load the plugin text domain from the bundled languages/ directory.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function load_textdomain(): void {
-		load_plugin_textdomain(
-			'quick-wp-lang',
-			false,
-			dirname( plugin_basename( QUICK_WP_LANG_PLUGIN_FILE ) ) . '/languages'
-		);
+		load_plugin_textdomain( 'quick-wp-lang', false, dirname( QUICK_WP_LANG_BASENAME ) . '/languages' );
 	}
 
 	/**
-	 * Add Settings link to plugin action links.
+	 * Add a Settings link to the plugin's row on the Plugins screen.
 	 *
 	 * @since 1.1.1
 	 *
-	 * @param array<string> $links Existing action links.
+	 * @param mixed $links Existing action links.
 	 *
-	 * @return array<string> Modified action links.
+	 * @return mixed Action links with Settings first, or the input unchanged if it isn't an array.
 	 */
-	public function add_plugin_action_links( array $links ): array {
-		$settings_url = admin_url( 'options-general.php?page=' . SETTINGS_PAGE_SLUG );
-
-		$settings_link = sprintf(
-			'<a href="%s">%s</a>',
-			esc_url( $settings_url ),
-			esc_html__( 'Settings', 'quick-wp-lang' )
-		);
-
-		array_unshift( $links, $settings_link );
+	public function add_plugin_action_links( mixed $links ): mixed {
+		if ( is_array( $links ) ) {
+			array_unshift(
+				$links,
+				sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( get_settings_page_url() ),
+					esc_html_x( 'Settings', 'plugin action link', 'quick-wp-lang' )
+				)
+			);
+		}
 
 		return $links;
 	}
 
 	/**
-	 * Register language column for all supported post types.
+	 * Add the language column to the list table of every supported post type.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
-	private function register_language_columns(): void {
-		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
-		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+	public function register_language_columns(): void {
+		$admin_hooks = $this->get_admin_hooks();
 
-		// If option is empty, default to post and page.
-		if ( empty( $enabled_post_types ) ) {
-			$enabled_post_types = array( 'post', 'page' );
+		foreach ( get_supported_post_types() as $post_type ) {
+			add_filter( "manage_{$post_type}_posts_columns", array( $admin_hooks, 'add_language_column' ) );
+			add_action( "manage_{$post_type}_posts_custom_column", array( $admin_hooks, 'render_language_column' ), 10, 2 );
+			add_filter( "manage_edit-{$post_type}_sortable_columns", array( $admin_hooks, 'make_language_column_sortable' ) );
 		}
-
-		/**
-		 * Filter the post types that support the language column.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array<string> $post_types Array of post type names.
-		 */
-		$post_types = apply_filters( 'quick_wp_lang_supported_post_types', $enabled_post_types );
-
-		if ( ! is_array( $post_types ) ) {
-			return;
-		}
-
-		foreach ( $post_types as $post_type ) {
-			add_filter( "manage_{$post_type}_posts_columns", array( $this->get_admin_hooks(), 'add_language_column' ) );
-			add_action( "manage_{$post_type}_posts_custom_column", array( $this->get_admin_hooks(), 'render_language_column' ), 10, 2 );
-			add_filter( "manage_edit-{$post_type}_sortable_columns", array( $this->get_admin_hooks(), 'make_language_column_sortable' ) );
-		}
-
-		// Add query modifier for sorting.
-		add_action( 'pre_get_posts', array( $this->get_admin_hooks(), 'sort_by_language_column' ) );
 	}
 
 	/**
-	 * Get admin hooks instance (lazy loading).
+	 * Get the admin hooks handler, creating it on first use.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return Admin_Hooks Admin hooks instance.
+	 * @return Admin_Hooks
 	 */
 	public function get_admin_hooks(): Admin_Hooks {
-		if ( is_null( $this->admin_hooks ) ) {
+		if ( null === $this->admin_hooks ) {
 			$this->admin_hooks = new Admin_Hooks();
 		}
+
 		return $this->admin_hooks;
 	}
 
 	/**
-	 * Get public hooks instance (lazy loading).
+	 * Get the public hooks handler, creating it on first use.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return Public_Hooks Public hooks instance.
+	 * @return Public_Hooks
 	 */
 	public function get_public_hooks(): Public_Hooks {
-		if ( is_null( $this->public_hooks ) ) {
+		if ( null === $this->public_hooks ) {
 			$this->public_hooks = new Public_Hooks();
 		}
+
 		return $this->public_hooks;
 	}
 }

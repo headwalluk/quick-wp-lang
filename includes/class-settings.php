@@ -8,40 +8,35 @@
 
 namespace Quick_WP_Lang;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || die();
 
 /**
- * Handles plugin settings page.
- *
- * Manages the admin settings page for selecting which languages to enable.
+ * Settings page: enabled languages, post types and the Content-Language header.
  *
  * @since 1.0.0
  */
 class Settings {
 	/**
-	 * Register settings and add menu items.
+	 * Register the settings page hooks.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
-	public function register(): void {
+	public function run(): void {
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 	}
 
 	/**
-	 * Add settings page to admin menu.
+	 * Add the settings page under Settings.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function add_settings_page(): void {
 		add_options_page(
 			__( 'Content Language Settings', 'quick-wp-lang' ),
-			__( 'Content Language', 'quick-wp-lang' ),
+			_x( 'Content Language', 'admin menu label', 'quick-wp-lang' ),
 			'manage_options',
 			SETTINGS_PAGE_SLUG,
 			array( $this, 'render_settings_page' )
@@ -49,49 +44,28 @@ class Settings {
 	}
 
 	/**
-	 * Enqueue admin scripts and styles.
+	 * Enqueue the settings page script and stylesheet.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $hook Current admin page hook.
-	 *
-	 * @return void
+	 * @param mixed $hook Current admin page hook suffix.
 	 */
-	public function enqueue_admin_scripts( string $hook ): void {
-		if ( 'settings_page_' . SETTINGS_PAGE_SLUG !== $hook ) {
-			return;
+	public function enqueue_admin_scripts( mixed $hook ): void {
+		if ( 'settings_page_' . SETTINGS_PAGE_SLUG === $hook ) {
+			wp_enqueue_style( HANDLE_ADMIN_STYLE, QUICK_WP_LANG_URL . 'assets/admin/admin.css', array(), QUICK_WP_LANG_VERSION );
+			wp_enqueue_script( HANDLE_SETTINGS_SCRIPT, QUICK_WP_LANG_URL . 'assets/admin/settings.js', array(), QUICK_WP_LANG_VERSION, true );
 		}
-
-		wp_enqueue_script(
-			'qwl-settings-search',
-			plugins_url( 'assets/admin/settings-search.js', __DIR__ ),
-			array(),
-			QUICK_WP_LANG_VERSION,
-			true
-		);
-
-		wp_add_inline_style(
-			'wp-admin',
-			'.qwl-search-wrap { margin-bottom: 12px; }' .
-			'.qwl-search-wrap input[type="text"] { width: 100%; max-width: 400px; }' .
-			'.qwl-search-wrap .button { vertical-align: top; }' .
-			'.qwl-language-count { margin: 0 0 12px 0; font-weight: 600; }' .
-			'.qwl-language-item code { color: #666; font-size: 0.9em; }' .
-			'.qwl-field-help { margin-top: 12px; }'
-		);
 	}
 
 	/**
-	 * Register plugin settings.
+	 * Register the plugin's settings, section and fields.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function register_settings(): void {
 		register_setting(
 			SETTINGS_OPTION_GROUP,
-			OPT_ENABLED_LANGUAGES,
+			OPTION_ENABLED_LANGUAGES,
 			array(
 				'type'              => 'array',
 				'sanitize_callback' => array( $this, 'sanitize_enabled_languages' ),
@@ -101,17 +75,17 @@ class Settings {
 
 		register_setting(
 			SETTINGS_OPTION_GROUP,
-			OPT_ENABLE_CONTENT_LANGUAGE_HEADER,
+			OPTION_ENABLE_CONTENT_LANGUAGE_HEADER,
 			array(
 				'type'              => 'boolean',
-				'sanitize_callback' => 'rest_sanitize_boolean',
-				'default'           => true,
+				'sanitize_callback' => array( $this, 'sanitize_boolean' ),
+				'default'           => DEFAULT_ENABLE_CONTENT_LANGUAGE_HEADER,
 			)
 		);
 
 		register_setting(
 			SETTINGS_OPTION_GROUP,
-			OPT_ENABLED_POST_TYPES,
+			OPTION_ENABLED_POST_TYPES,
 			array(
 				'type'              => 'array',
 				'sanitize_callback' => array( $this, 'sanitize_enabled_post_types' ),
@@ -152,37 +126,31 @@ class Settings {
 	}
 
 	/**
-	 * Render settings page.
+	 * Render the settings page.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function render_settings_page(): void {
-		$capability_check = current_user_can( 'manage_options' );
-
-		if ( ! $capability_check ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have permission to access this page.', 'quick-wp-lang' ) );
 		}
 
-		printf( '<div class="wrap">' );
+		echo '<div class="wrap">';
 		printf( '<h1>%s</h1>', esc_html( get_admin_page_title() ) );
-		printf( '<form method="post" action="options.php">' );
+		echo '<form method="post" action="options.php">';
 
 		settings_fields( SETTINGS_OPTION_GROUP );
 		do_settings_sections( SETTINGS_PAGE_SLUG );
-		submit_button( __( 'Save Languages', 'quick-wp-lang' ) );
+		submit_button();
 
-		printf( '</form>' );
-		printf( '</div>' );
+		echo '</form>';
+		echo '</div>';
 	}
 
 	/**
-	 * Render section description.
+	 * Render the section description.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function render_section_description(): void {
 		printf(
@@ -192,42 +160,38 @@ class Settings {
 	}
 
 	/**
-	 * Render languages checkboxes field.
+	 * Render the language checkboxes, enabled languages first.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function render_languages_field(): void {
 		$all_languages     = get_available_languages_list();
-		$enabled_languages = get_option( OPT_ENABLED_LANGUAGES, array() );
+		$enabled_languages = get_option( OPTION_ENABLED_LANGUAGES, array() );
 		$enabled_languages = is_array( $enabled_languages ) ? $enabled_languages : array();
 		$site_locale       = get_locale();
 		$total_count       = count( $all_languages );
-		$enabled_count     = count( $enabled_languages );
+		$enabled_count     = count( array_intersect( array_keys( $all_languages ), $enabled_languages ) );
+		$sorted_languages  = $this->sort_languages_by_enabled_status( $all_languages, $enabled_languages );
 
-		// Sort languages: enabled first, then disabled (alphabetically within each group).
-		$sorted_languages = $this->sort_languages_by_enabled_status( $all_languages, $enabled_languages );
-
-		// Search box.
 		printf(
 			'<div class="qwl-search-wrap"><input type="text" id="qwl-language-search" placeholder="%s" /> <button type="button" id="qwl-language-search-clear" class="button">%s</button></div>',
 			esc_attr__( 'Search languages by name or code...', 'quick-wp-lang' ),
-			esc_html__( 'Clear', 'quick-wp-lang' )
+			esc_html_x( 'Clear', 'button label; empties the search box', 'quick-wp-lang' )
 		);
 
-		// Enabled count indicator.
 		printf(
 			'<p class="qwl-language-count">%s</p>',
-			sprintf(
-				/* translators: 1: Number of enabled languages, 2: Total number of available languages. */
-				esc_html__( '%1$d of %2$d languages enabled', 'quick-wp-lang' ),
-				absint( $enabled_count ),
-				absint( $total_count )
+			esc_html(
+				sprintf(
+					/* translators: 1: Number of enabled languages, 2: Total number of available languages. */
+					_n( '%1$d of %2$d language enabled', '%1$d of %2$d languages enabled', $total_count, 'quick-wp-lang' ),
+					$enabled_count,
+					$total_count
+				)
 			)
 		);
 
-		printf( '<fieldset>' );
+		echo '<fieldset>';
 		printf( '<legend class="screen-reader-text"><span>%s</span></legend>', esc_html__( 'Enable Languages', 'quick-wp-lang' ) );
 
 		foreach ( $sorted_languages as $locale => $name ) {
@@ -242,7 +206,7 @@ class Settings {
 				esc_attr( $name ),
 				esc_attr( $locale ),
 				esc_attr( $field_id ),
-				esc_attr( OPT_ENABLED_LANGUAGES ),
+				esc_attr( OPTION_ENABLED_LANGUAGES ),
 				esc_attr( $field_id ),
 				esc_attr( $locale ),
 				checked( $checked, true, false ),
@@ -253,9 +217,8 @@ class Settings {
 			);
 		}
 
-		printf( '</fieldset>' );
+		echo '</fieldset>';
 
-		// Empty state help text.
 		printf(
 			'<p class="description qwl-field-help">%s</p>',
 			esc_html__( 'Select at least one language to enable language selection in your posts and pages.', 'quick-wp-lang' )
@@ -263,19 +226,16 @@ class Settings {
 	}
 
 	/**
-	 * Render Content-Language header toggle field.
+	 * Render the Content-Language header checkbox.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @return void
 	 */
 	public function render_header_toggle_field(): void {
-		$enabled = get_option( OPT_ENABLE_CONTENT_LANGUAGE_HEADER, true );
-		$enabled = rest_sanitize_boolean( $enabled );
+		$enabled = is_content_language_header_enabled();
 
 		printf(
 			'<label for="qwl_enable_content_language_header"><input type="checkbox" name="%s" id="qwl_enable_content_language_header" value="1"%s /> %s</label>',
-			esc_attr( OPT_ENABLE_CONTENT_LANGUAGE_HEADER ),
+			esc_attr( OPTION_ENABLE_CONTENT_LANGUAGE_HEADER ),
 			checked( $enabled, true, false ),
 			esc_html__( 'Send Content-Language HTTP header for posts with alternative languages', 'quick-wp-lang' )
 		);
@@ -287,23 +247,15 @@ class Settings {
 	}
 
 	/**
-	 * Render post types checkboxes field.
+	 * Render the post type checkboxes.
 	 *
 	 * @since 1.1.0
-	 *
-	 * @return void
 	 */
 	public function render_post_types_field(): void {
 		$all_post_types     = get_post_types( array( 'public' => true ), 'objects' );
-		$enabled_post_types = get_option( OPT_ENABLED_POST_TYPES, array() );
-		$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+		$enabled_post_types = get_enabled_post_types();
 
-		// If option is empty, default to post and page.
-		if ( empty( $enabled_post_types ) ) {
-			$enabled_post_types = array( 'post', 'page' );
-		}
-
-		printf( '<fieldset>' );
+		echo '<fieldset>';
 		printf( '<legend class="screen-reader-text"><span>%s</span></legend>', esc_html__( 'Enable for Post Types', 'quick-wp-lang' ) );
 
 		foreach ( $all_post_types as $post_type_name => $post_type_obj ) {
@@ -313,7 +265,7 @@ class Settings {
 			printf(
 				'<div><label for="%s"><input type="checkbox" name="%s[]" id="%s" value="%s"%s /> %s <code>%s</code></label></div>',
 				esc_attr( $field_id ),
-				esc_attr( OPT_ENABLED_POST_TYPES ),
+				esc_attr( OPTION_ENABLED_POST_TYPES ),
 				esc_attr( $field_id ),
 				esc_attr( $post_type_name ),
 				checked( $checked, true, false ),
@@ -322,7 +274,7 @@ class Settings {
 			);
 		}
 
-		printf( '</fieldset>' );
+		echo '</fieldset>';
 
 		printf(
 			'<p class="description qwl-field-help">%s</p>',
@@ -331,26 +283,24 @@ class Settings {
 	}
 
 	/**
-	 * Sanitize enabled languages array.
+	 * Keep only submitted locales that are in the available languages list.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param mixed $value Submitted value.
 	 *
-	 * @return array<string> Sanitized array of language codes.
+	 * @return array<string> Locale codes.
 	 */
-	public function sanitize_enabled_languages( $value ): array {
+	public function sanitize_enabled_languages( mixed $value ): array {
 		$result = array();
 
-		if ( ! is_array( $value ) ) {
-			return $result;
-		}
+		if ( is_array( $value ) ) {
+			$all_languages = get_available_languages_list();
 
-		$all_languages = get_available_languages_list();
-
-		foreach ( $value as $locale ) {
-			if ( is_string( $locale ) && isset( $all_languages[ $locale ] ) ) {
-				$result[] = $locale;
+			foreach ( $value as $locale ) {
+				if ( is_string( $locale ) && isset( $all_languages[ $locale ] ) ) {
+					$result[] = $locale;
+				}
 			}
 		}
 
@@ -358,26 +308,24 @@ class Settings {
 	}
 
 	/**
-	 * Sanitize enabled post types array.
+	 * Keep only submitted post types that are registered and public.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @param mixed $value Submitted value.
 	 *
-	 * @return array<string> Sanitized array of post type names.
+	 * @return array<string> Post type names.
 	 */
-	public function sanitize_enabled_post_types( $value ): array {
+	public function sanitize_enabled_post_types( mixed $value ): array {
 		$result = array();
 
-		if ( ! is_array( $value ) ) {
-			return $result;
-		}
+		if ( is_array( $value ) ) {
+			$all_post_types = get_post_types( array( 'public' => true ), 'names' );
 
-		$all_post_types = get_post_types( array( 'public' => true ), 'names' );
-
-		foreach ( $value as $post_type ) {
-			if ( is_string( $post_type ) && in_array( $post_type, $all_post_types, true ) ) {
-				$result[] = $post_type;
+			foreach ( $value as $post_type ) {
+				if ( is_string( $post_type ) && in_array( $post_type, $all_post_types, true ) ) {
+					$result[] = $post_type;
+				}
 			}
 		}
 
@@ -385,7 +333,20 @@ class Settings {
 	}
 
 	/**
-	 * Sort languages array with enabled languages first.
+	 * Read a submitted checkbox as a boolean.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param mixed $value Submitted value.
+	 *
+	 * @return bool
+	 */
+	public function sanitize_boolean( mixed $value ): bool {
+		return (bool) filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+	}
+
+	/**
+	 * Sort the languages so enabled ones come first, keeping list order within each group.
 	 *
 	 * @since 1.1.0
 	 *
@@ -406,7 +367,6 @@ class Settings {
 			}
 		}
 
-		// Both groups are already sorted alphabetically by name (from get_available_languages_list).
 		return array_merge( $enabled, $disabled );
 	}
 }

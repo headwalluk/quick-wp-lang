@@ -1,5 +1,5 @@
 /**
- * Settings page language search/filter.
+ * Settings page: filter the language list by name or locale code.
  *
  * @package Quick_WP_Lang
  * @since 1.1.0

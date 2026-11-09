@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Quick WP Lang
- * Plugin URI: https://headwall-hosting.com/plugins/alternative-language-for-wordpress-posts/
+ * Plugin URI: https://github.com/headwalluk/quick-wp-lang
  * Description: Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO.
  * Version: 1.2.1
- * Requires at least: 6.0
- * Requires PHP: 8.0
+ * Requires at least: 7.1
+ * Requires PHP: 8.2
  * Author: Paul Faulkner
  * Author URI: https://headwall-hosting.com/
  * License: GPL v2 or later
@@ -16,42 +16,36 @@
  * @package Quick_WP_Lang
  */
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || die();
 
-// Define plugin constants.
 define( 'QUICK_WP_LANG_VERSION', '1.2.1' );
-define( 'QUICK_WP_LANG_PLUGIN_FILE', __FILE__ );
-define( 'QUICK_WP_LANG_PLUGIN_DIR', __DIR__ );
-define( 'QUICK_WP_LANG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'QUICK_WP_LANG_FILE', __FILE__ );
+define( 'QUICK_WP_LANG_PATH', plugin_dir_path( __FILE__ ) );
+define( 'QUICK_WP_LANG_URL', plugin_dir_url( __FILE__ ) );
+define( 'QUICK_WP_LANG_BASENAME', plugin_basename( __FILE__ ) );
 
-// Load constants.
-require_once QUICK_WP_LANG_PLUGIN_DIR . '/constants.php';
+require_once QUICK_WP_LANG_PATH . 'constants.php';
+require_once QUICK_WP_LANG_PATH . 'functions-private.php';
 
-// Load helper functions.
-require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/functions-languages.php';
-
-// Load core classes.
-require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-plugin.php';
-require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-settings.php';
-require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-admin-hooks.php';
-require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-public-hooks.php';
+require_once QUICK_WP_LANG_PATH . 'includes/class-settings.php';
+require_once QUICK_WP_LANG_PATH . 'includes/class-admin-hooks.php';
+require_once QUICK_WP_LANG_PATH . 'includes/class-public-hooks.php';
+require_once QUICK_WP_LANG_PATH . 'includes/class-plugin.php';
 
 // GitHub auto-updates (admin, cron and WP-CLI only — no need to load on front-end requests).
 if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-	require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-github-updater.php';
-	new Quick_WP_Lang\Github_Updater( QUICK_WP_LANG_PLUGIN_FILE, Quick_WP_Lang\UPDATER_GITHUB_REPO, QUICK_WP_LANG_VERSION, 'quick_wp_lang_updater_enabled' );
+	require_once QUICK_WP_LANG_PATH . 'includes/class-github-updater.php';
+	new Quick_WP_Lang\Github_Updater( QUICK_WP_LANG_FILE, Quick_WP_Lang\UPDATER_GITHUB_REPO, QUICK_WP_LANG_VERSION, 'quick_wp_lang_updater_enabled' );
 }
 
 /**
- * Initialize and run the plugin.
+ * Initialize the plugin.
  *
  * @since 1.0.0
- *
- * @return void
  */
-function quick_wp_lang_plugin_run() {
-	global $quick_wp_lang_plugin_instance;
-	$quick_wp_lang_plugin_instance = new \Quick_WP_Lang\Plugin();
-	$quick_wp_lang_plugin_instance->run();
+function quick_wp_lang_run(): void {
+	$plugin = Quick_WP_Lang\Plugin::instance();
+	$plugin->run();
 }
-quick_wp_lang_plugin_run();
+quick_wp_lang_run();
