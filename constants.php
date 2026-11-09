@@ -38,6 +38,7 @@ const OPTION_ENABLED_LANGUAGES              = 'qwl_enabled_languages';
 const OPTION_ENABLED_POST_TYPES             = 'qwl_enabled_post_types';
 const OPTION_ENABLE_CONTENT_LANGUAGE_HEADER = 'qwl_enable_content_language_header';
 const OPTION_DISMISSED_NOTICES              = 'qwl_dismissed_notices';
+const OPTION_DELETE_DATA_ON_UNINSTALL       = 'qwl_delete_data_on_uninstall'; // Since 1.3.0.
 
 /**
  * Defaults.
@@ -47,6 +48,7 @@ const OPTION_DISMISSED_NOTICES              = 'qwl_dismissed_notices';
 const DEFAULT_LANGUAGE                       = ''; // Empty = site default.
 const DEFAULT_POST_TYPES                     = array( 'post', 'page' );
 const DEFAULT_ENABLE_CONTENT_LANGUAGE_HEADER = true;
+const DEFAULT_DELETE_DATA_ON_UNINSTALL       = false;
 
 /**
  * Nonces.
@@ -91,6 +93,7 @@ const TRANSLATIONS_LIMIT           = 100; // Translations read per original.
 const SETTINGS_PAGE_SLUG    = 'qwl-settings';
 const SETTINGS_OPTION_GROUP = 'qwl_settings_group';
 const SETTINGS_SECTION_ID   = 'qwl_languages_section';
+const SETTINGS_UNINSTALL_ID = 'qwl_uninstall_section';
 
 /**
  * Script and style handles.

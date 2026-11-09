@@ -1,48 +1,55 @@
 <?php
 /**
- * Uninstall script for Quick WP Lang
+ * Quick WP Lang — Uninstaller
  *
- * Removes all plugin data when the plugin is deleted via the WordPress admin.
- * This file is only executed when the plugin is uninstalled through the WordPress
- * admin interface (Plugins > Delete). It is not executed on deactivation.
+ * Runs when the plugin is deleted from the Plugins screen, not on deactivation.
+ * Deletes nothing unless the "Delete all plugin data when uninstalled" setting
+ * is on; see docs/configuration.md.
  *
  * @package Quick_WP_Lang
  */
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace Quick_WP_Lang;
 
-// Exit if not called by WordPress during uninstall.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
-}
+// Bail out if not invoked by WordPress's uninstall handler.
+defined( 'WP_UNINSTALL_PLUGIN' ) || die();
 
-/**
- * Clean up plugin data
- *
- * Removes all options and post meta created by the plugin.
- * This ensures a clean uninstall with no database residue.
- */
-function quick_wp_lang_uninstall_cleanup() {
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ . '/includes/class-github-updater.php';
+
+$quick_wp_lang_delete_data = (bool) filter_var(
+	get_option( OPTION_DELETE_DATA_ON_UNINSTALL, DEFAULT_DELETE_DATA_ON_UNINSTALL ),
+	FILTER_VALIDATE_BOOLEAN
+);
+
+if ( $quick_wp_lang_delete_data ) {
 	global $wpdb;
 
-	// Remove plugin options.
-	delete_option( 'qwl_enabled_languages' );
-	delete_option( 'qwl_enabled_post_types' );
-	delete_option( 'qwl_enable_content_language_header' );
-	delete_option( 'qwl_dismissed_notices' );
-
-	// Remove all post meta for language assignments.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$wpdb->query(
+	// Keys are found by prefix so data from older versions goes too; each is then
+	// deleted through the WordPress API so object caches are cleared with it.
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-off prefix lookup at uninstall; there is no API for it.
+	$quick_wp_lang_meta_keys = $wpdb->get_col(
 		$wpdb->prepare(
-			"DELETE FROM {$wpdb->postmeta} WHERE meta_key = %s",
-			'_qwl_language'
+			"SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE %s",
+			$wpdb->esc_like( META_PREFIX ) . '%'
 		)
 	);
-}
 
-// Execute cleanup.
-quick_wp_lang_uninstall_cleanup();
+	$quick_wp_lang_option_names = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$wpdb->esc_like( OPTION_PREFIX ) . '%'
+		)
+	);
+	// phpcs:enable
+
+	foreach ( $quick_wp_lang_meta_keys as $quick_wp_lang_meta_key ) {
+		delete_metadata( 'post', 0, $quick_wp_lang_meta_key, '', true );
+	}
+
+	foreach ( $quick_wp_lang_option_names as $quick_wp_lang_option_name ) {
+		delete_option( $quick_wp_lang_option_name );
+	}
+
+	Github_Updater::delete_cache( basename( __DIR__ ) );
+}

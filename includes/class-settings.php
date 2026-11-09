@@ -93,6 +93,16 @@ class Settings {
 			)
 		);
 
+		register_setting(
+			SETTINGS_OPTION_GROUP,
+			OPTION_DELETE_DATA_ON_UNINSTALL,
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => array( $this, 'sanitize_boolean' ),
+				'default'           => DEFAULT_DELETE_DATA_ON_UNINSTALL,
+			)
+		);
+
 		add_settings_section(
 			SETTINGS_SECTION_ID,
 			__( 'Available Languages', 'quick-wp-lang' ),
@@ -122,6 +132,45 @@ class Settings {
 			array( $this, 'render_languages_field' ),
 			SETTINGS_PAGE_SLUG,
 			SETTINGS_SECTION_ID
+		);
+
+		add_settings_section(
+			SETTINGS_UNINSTALL_ID,
+			_x( 'Uninstall', 'settings section heading', 'quick-wp-lang' ),
+			'__return_false',
+			SETTINGS_PAGE_SLUG
+		);
+
+		add_settings_field(
+			'qwl_delete_data_on_uninstall_field',
+			__( 'Plugin data', 'quick-wp-lang' ),
+			array( $this, 'render_delete_data_field' ),
+			SETTINGS_PAGE_SLUG,
+			SETTINGS_UNINSTALL_ID
+		);
+	}
+
+	/**
+	 * Render the delete-data-on-uninstall checkbox.
+	 *
+	 * @since 1.3.0
+	 */
+	public function render_delete_data_field(): void {
+		$enabled = (bool) filter_var(
+			get_option( OPTION_DELETE_DATA_ON_UNINSTALL, DEFAULT_DELETE_DATA_ON_UNINSTALL ),
+			FILTER_VALIDATE_BOOLEAN
+		);
+
+		printf(
+			'<label for="qwl_delete_data_on_uninstall"><input type="checkbox" name="%s" id="qwl_delete_data_on_uninstall" value="1"%s /> %s</label>',
+			esc_attr( OPTION_DELETE_DATA_ON_UNINSTALL ),
+			checked( $enabled, true, false ),
+			esc_html__( 'Delete all plugin data when uninstalled', 'quick-wp-lang' )
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__( 'When ticked, deleting the plugin from the Plugins screen removes its settings and every language and translation link set on your content. Deactivating never deletes anything.', 'quick-wp-lang' )
 		);
 	}
 
