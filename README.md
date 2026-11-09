@@ -20,6 +20,8 @@ For a site in one language with some content in others — an English (UK) site 
 
 It doesn't translate anything or create copies of posts. See [how it works](docs/how-it-works.md).
 
+![Ad-hoc content in a different language with proper SEO markup](docs/polski-tak.webp)
+
 ## Install
 
 ### Standard plugin
