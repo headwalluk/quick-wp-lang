@@ -19,6 +19,14 @@ defined( 'ABSPATH' ) || die();
 class Public_Hooks {
 
 	/**
+	 * Hreflang alternates for the queried post, as BCP 47 tag => URL; null until first built.
+	 *
+	 * @since 1.3.0
+	 * @var ?array<string, string>
+	 */
+	private ?array $hreflang_alternates = null;
+
+	/**
 	 * Replace the lang attribute on the html tag.
 	 *
 	 * @since 1.0.0
@@ -47,20 +55,71 @@ class Public_Hooks {
 	}
 
 	/**
-	 * Output the hreflang link tag in the head.
+	 * Output a hreflang link tag for each version of the queried post.
 	 *
 	 * @since 1.0.0
 	 */
 	public function output_hreflang_tags(): void {
-		$language = $this->get_current_post_language();
-
-		if ( DEFAULT_LANGUAGE !== $language ) {
+		foreach ( $this->get_hreflang_alternates() as $hreflang => $url ) {
 			printf(
 				'<link rel="alternate" hreflang="%s" href="%s" />' . "\n",
-				esc_attr( locale_to_bcp47( $language ) ),
-				esc_url( (string) get_permalink( get_queried_object_id() ) )
+				esc_attr( $hreflang ),
+				esc_url( $url )
 			);
 		}
+	}
+
+	/**
+	 * Get the hreflang alternates for the queried post, as BCP 47 tag (or x-default) => URL.
+	 *
+	 * A linked group lists its original under the site locale and as x-default, then each
+	 * published translation; the oldest translation wins a language. An unlinked post with a
+	 * language lists only itself. See docs/how-it-works.md.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return array<string, string>
+	 */
+	private function get_hreflang_alternates(): array {
+		if ( null === $this->hreflang_alternates ) {
+			$this->hreflang_alternates = array();
+
+			$post_id     = is_singular() ? get_queried_object_id() : 0;
+			$language    = $post_id > 0 ? get_post_language( $post_id ) : DEFAULT_LANGUAGE;
+			$original_id = DEFAULT_LANGUAGE === $language ? $post_id : get_translation_of( $post_id );
+
+			$is_valid_original = $original_id > 0
+				&& 'publish' === get_post_status( $original_id )
+				&& DEFAULT_LANGUAGE === get_post_language( $original_id );
+
+			$translation_ids = $is_valid_original ? get_translation_ids( $original_id, array( 'publish' ) ) : array();
+			$site_hreflang   = locale_to_bcp47( get_locale() );
+			$translations    = array();
+
+			foreach ( $translation_ids as $translation_id ) {
+				$hreflang = locale_to_bcp47( get_post_language( $translation_id ) );
+
+				if ( '' !== $hreflang && $site_hreflang !== $hreflang && ! isset( $translations[ $hreflang ] ) ) {
+					$translations[ $hreflang ] = (string) get_permalink( $translation_id );
+				}
+			}
+
+			if ( ! empty( $translations ) ) {
+				$original_url = (string) get_permalink( $original_id );
+
+				$this->hreflang_alternates = array_merge(
+					array( $site_hreflang => $original_url ),
+					$translations,
+					array( 'x-default' => $original_url )
+				);
+			} elseif ( DEFAULT_LANGUAGE !== $language ) {
+				$this->hreflang_alternates = array( locale_to_bcp47( $language ) => (string) get_permalink( $post_id ) );
+			} else {
+				// A post in the site language with no translations needs no hreflang.
+			}
+		}
+
+		return $this->hreflang_alternates;
 	}
 
 	/**

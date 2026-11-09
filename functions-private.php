@@ -167,6 +167,69 @@ function get_post_language( int $post_id ): string {
 }
 
 /**
+ * Get the ID of the original a post is linked to as a translation, or 0.
+ *
+ * @since 1.3.0
+ *
+ * @param int $post_id Post ID.
+ *
+ * @return int Original's post ID, or 0.
+ */
+function get_translation_of( int $post_id ): int {
+	$original_id = get_post_meta( $post_id, META_TRANSLATION_OF, true );
+
+	return is_numeric( $original_id ) ? max( 0, (int) $original_id ) : 0;
+}
+
+/**
+ * Get the IDs of posts linked to an original as its translations, oldest first.
+ *
+ * @since 1.3.0
+ *
+ * @param int           $original_id   Original's post ID.
+ * @param array<string> $post_statuses Post statuses to include.
+ *
+ * @return array<int> Post IDs.
+ */
+function get_translation_ids( int $original_id, array $post_statuses ): array {
+	$post_ids = get_posts(
+		array(
+			'post_type'        => 'any',
+			'post_status'      => $post_statuses,
+			'posts_per_page'   => TRANSLATIONS_LIMIT,
+			'orderby'          => 'ID',
+			'order'            => 'ASC',
+			'fields'           => 'ids',
+			'no_found_rows'    => true,
+			'suppress_filters' => true,
+			'meta_query'       => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- meta_key is indexed and only translations carry this key.
+				array(
+					'key'   => META_TRANSLATION_OF,
+					'value' => (string) $original_id,
+				),
+			),
+		)
+	);
+
+	return array_map( 'intval', $post_ids );
+}
+
+/**
+ * Get a language's display name from the available list, falling back to the locale code.
+ *
+ * @since 1.3.0
+ *
+ * @param string $locale WordPress locale.
+ *
+ * @return string Language name.
+ */
+function get_language_name( string $locale ): string {
+	$all_languages = get_available_languages_list();
+
+	return isset( $all_languages[ $locale ] ) && is_string( $all_languages[ $locale ] ) ? $all_languages[ $locale ] : $locale;
+}
+
+/**
  * Convert a WordPress locale to a BCP 47 language tag, e.g. 'en_GB' to 'en-GB'.
  *
  * @since 1.0.0

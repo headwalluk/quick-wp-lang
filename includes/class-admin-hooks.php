@@ -74,6 +74,9 @@ class Admin_Hooks {
 
 			echo '</fieldset>';
 
+			$this->render_translation_of_field( $post, $current_language );
+			$this->render_translations_list( $post, $current_language );
+
 			printf(
 				'<p class="description qwl-meta-box-settings-link"><a href="%s">%s</a></p>',
 				esc_url( get_settings_page_url() ),
@@ -85,6 +88,157 @@ class Admin_Hooks {
 				esc_html__( 'If this content is written in a language other than the site default, select it here. This will update the page\'s language attributes and hreflang tags for better SEO.', 'quick-wp-lang' )
 			);
 		}
+	}
+
+	/**
+	 * Render the "Translation of" select, hidden by meta-box.js while the site default is chosen.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param \WP_Post $post             Post being edited.
+	 * @param string   $current_language Post's current language override.
+	 */
+	private function render_translation_of_field( \WP_Post $post, string $current_language ): void {
+		$current_original_id = get_translation_of( $post->ID );
+		$candidate_ids       = $this->get_translation_candidate_ids( $post );
+
+		if ( $current_original_id > 0 && ! in_array( $current_original_id, $candidate_ids, true ) && get_post( $current_original_id ) instanceof \WP_Post ) {
+			array_unshift( $candidate_ids, $current_original_id );
+		}
+
+		printf(
+			'<div class="qwl-translation-of"%s><p><label for="%s"><strong>%s</strong></label></p>',
+			DEFAULT_LANGUAGE === $current_language ? ' hidden' : '',
+			esc_attr( FIELD_TRANSLATION_OF ),
+			esc_html_x( 'Translation of', 'meta box field label; the original this content translates', 'quick-wp-lang' )
+		);
+
+		printf(
+			'<select name="%1$s" id="%1$s" class="widefat"><option value="0">%2$s</option>',
+			esc_attr( FIELD_TRANSLATION_OF ),
+			esc_html_x( '— Not linked —', 'no original selected', 'quick-wp-lang' )
+		);
+
+		foreach ( $candidate_ids as $candidate_id ) {
+			printf(
+				'<option value="%d"%s>%s</option>',
+				absint( $candidate_id ),
+				selected( $current_original_id, $candidate_id, false ),
+				esc_html( $this->get_post_label( $candidate_id ) )
+			);
+		}
+
+		echo '</select>';
+
+		printf(
+			'<p class="description">%s</p></div>',
+			esc_html(
+				sprintf(
+					/* translators: %s: Name of the site's language, e.g. "English (UK)". */
+					__( 'The %s version of this content. Both pages then list each other in their hreflang tags, so search engines show visitors the right one.', 'quick-wp-lang' ),
+					get_language_name( get_locale() )
+				)
+			)
+		);
+	}
+
+	/**
+	 * List the translations linked to this post, when it is an original in the site language.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param \WP_Post $post             Post being edited.
+	 * @param string   $current_language Post's current language override.
+	 */
+	private function render_translations_list( \WP_Post $post, string $current_language ): void {
+		$translation_ids = DEFAULT_LANGUAGE === $current_language
+			? get_translation_ids( $post->ID, array( 'publish', 'future', 'draft', 'pending', 'private' ) )
+			: array();
+
+		if ( ! empty( $translation_ids ) ) {
+			printf(
+				'<div class="qwl-translations"><p><strong>%s</strong></p><ul>',
+				esc_html_x( 'Translations', 'meta box heading; list of linked translations', 'quick-wp-lang' )
+			);
+
+			$published_languages = array();
+
+			foreach ( $translation_ids as $translation_id ) {
+				$edit_link    = get_edit_post_link( $translation_id );
+				$language     = get_post_language( $translation_id );
+				$is_published = 'publish' === get_post_status( $translation_id );
+
+				// Mirrors Public_Hooks::get_hreflang_alternates(): the oldest published one wins.
+				$is_repeated = $is_published && in_array( $language, $published_languages, true );
+
+				if ( $is_published ) {
+					$published_languages[] = $language;
+				}
+
+				printf(
+					'<li>%s: <a href="%s">%s</a>%s</li>',
+					esc_html( get_language_name( $language ) ),
+					esc_url( is_string( $edit_link ) ? $edit_link : '' ),
+					esc_html( $this->get_post_label( $translation_id ) ),
+					$is_repeated ? ' <em>' . esc_html__( '(not used: an older translation already covers this language)', 'quick-wp-lang' ) . '</em>' : ''
+				);
+			}
+
+			echo '</ul></div>';
+		}
+	}
+
+	/**
+	 * Get the posts that can be chosen as this post's original: same type, no language override.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param \WP_Post $post Post being edited.
+	 *
+	 * @return array<int> Post IDs, ordered by title.
+	 */
+	private function get_translation_candidate_ids( \WP_Post $post ): array {
+		$post_ids = get_posts(
+			array(
+				'post_type'        => $post->post_type,
+				'post_status'      => array( 'publish', 'future', 'draft', 'pending', 'private' ),
+				'posts_per_page'   => TRANSLATION_CANDIDATES_LIMIT,
+				'post__not_in'     => array( $post->ID ), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Excludes one post from an admin-only list.
+				'orderby'          => 'title',
+				'order'            => 'ASC',
+				'fields'           => 'ids',
+				'no_found_rows'    => true,
+				'suppress_filters' => true,
+				'meta_query'       => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Admin-only list, built once per edit screen.
+					array(
+						'key'     => META_LANGUAGE,
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			)
+		);
+
+		return array_map( 'intval', $post_ids );
+	}
+
+	/**
+	 * Get a post's title and ID for a list, e.g. "About us (#42)".
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param int $post_id Post ID.
+	 *
+	 * @return string Label.
+	 */
+	private function get_post_label( int $post_id ): string {
+		$title = get_the_title( $post_id );
+
+		return sprintf(
+			/* translators: 1: Post title, 2: Post ID. */
+			__( '%1$s (#%2$d)', 'quick-wp-lang' ),
+			'' === $title ? __( '(no title)', 'quick-wp-lang' ) : $title,
+			$post_id
+		);
 	}
 
 	/**
@@ -118,7 +272,38 @@ class Admin_Hooks {
 			} else {
 				update_post_meta( $post_id, META_LANGUAGE, $language );
 			}
+
+			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+			$original_id = isset( $_POST[ FIELD_TRANSLATION_OF ] ) ? absint( wp_unslash( $_POST[ FIELD_TRANSLATION_OF ] ) ) : 0;
+			// phpcs:enable
+
+			if ( DEFAULT_LANGUAGE !== $language && $this->is_valid_original( $original_id, $post_id ) ) {
+				update_post_meta( $post_id, META_TRANSLATION_OF, $original_id );
+			} else {
+				delete_post_meta( $post_id, META_TRANSLATION_OF );
+			}
 		}
+	}
+
+	/**
+	 * Whether a post can be the original of another: a different post, same type, in the site language.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param int $original_id    Proposed original's post ID.
+	 * @param int $translation_id Translation's post ID.
+	 *
+	 * @return bool
+	 */
+	private function is_valid_original( int $original_id, int $translation_id ): bool {
+		$original    = $original_id > 0 && $original_id !== $translation_id ? get_post( $original_id ) : null;
+		$translation = get_post( $translation_id );
+
+		return $original instanceof \WP_Post
+			&& $translation instanceof \WP_Post
+			&& $original->post_type === $translation->post_type
+			&& 'trash' !== $original->post_status
+			&& DEFAULT_LANGUAGE === get_post_language( $original_id );
 	}
 
 	/**
@@ -293,6 +478,10 @@ class Admin_Hooks {
 
 		if ( $screen instanceof \WP_Screen && ( 'post' === $screen->base || 'edit' === $screen->base ) ) {
 			wp_enqueue_style( HANDLE_ADMIN_STYLE, QUICK_WP_LANG_URL . 'assets/admin/admin.css', array(), QUICK_WP_LANG_VERSION );
+		}
+
+		if ( $screen instanceof \WP_Screen && 'post' === $screen->base && in_array( $screen->post_type, get_supported_post_types(), true ) ) {
+			wp_enqueue_script( HANDLE_META_BOX_SCRIPT, QUICK_WP_LANG_URL . 'assets/admin/meta-box.js', array(), QUICK_WP_LANG_VERSION, true );
 		}
 
 		if ( $this->should_show_no_languages_notice() ) {

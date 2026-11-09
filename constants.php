@@ -26,7 +26,8 @@ const META_PREFIX   = '_qwl_';
  *
  * @since 1.0.0
  */
-const META_LANGUAGE = '_qwl_language';
+const META_LANGUAGE       = '_qwl_language';
+const META_TRANSLATION_OF = '_qwl_translation_of'; // Since 1.3.0: ID of the original this post translates.
 
 /**
  * Options. An option's name is stored data and never changes.
@@ -69,9 +70,18 @@ const NOTICE_NO_LANGUAGES        = 'no_languages';
  *
  * @since 1.3.0
  */
-const META_BOX_ID     = 'quick_wp_lang_language_meta_box';
-const FIELD_LANGUAGE  = 'quick_wp_lang_language';
-const COLUMN_LANGUAGE = 'quick_wp_lang_language';
+const META_BOX_ID          = 'quick_wp_lang_language_meta_box';
+const FIELD_LANGUAGE       = 'quick_wp_lang_language';
+const FIELD_TRANSLATION_OF = 'quick_wp_lang_translation_of';
+const COLUMN_LANGUAGE      = 'quick_wp_lang_language';
+
+/**
+ * Translation groups: an original in the site language plus the posts linked to it.
+ *
+ * @since 1.3.0
+ */
+const TRANSLATION_CANDIDATES_LIMIT = 500; // Originals offered in the "Translation of" list.
+const TRANSLATIONS_LIMIT           = 100; // Translations read per original.
 
 /**
  * Settings page identifiers.
@@ -89,6 +99,7 @@ const SETTINGS_SECTION_ID   = 'qwl_languages_section';
  */
 const HANDLE_SETTINGS_SCRIPT = 'quick-wp-lang-settings';
 const HANDLE_ADMIN_SCRIPT    = 'quick-wp-lang-admin';
+const HANDLE_META_BOX_SCRIPT = 'quick-wp-lang-meta-box';
 const HANDLE_ADMIN_STYLE     = 'quick-wp-lang-admin';
 
 /**
