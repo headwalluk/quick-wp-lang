@@ -55,18 +55,16 @@ class Public_Hooks {
 		$language = $this->get_current_post_language();
 
 		if ( DEFAULT_LANGUAGE !== $language ) {
-			global $wp;
-
 			printf(
 				'<link rel="alternate" hreflang="%s" href="%s" />' . "\n",
 				esc_attr( locale_to_bcp47( $language ) ),
-				esc_url( home_url( $wp->request ) )
+				esc_url( (string) get_permalink( get_queried_object_id() ) )
 			);
 		}
 	}
 
 	/**
-	 * Output the og:locale meta tag, unless a known SEO plugin outputs its own.
+	 * Output the og:locale meta tag, unless a known SEO plugin outputs its own (Yoast's is filtered instead).
 	 *
 	 * @since 1.0.0
 	 */
@@ -79,6 +77,43 @@ class Public_Hooks {
 				esc_attr( $language )
 			);
 		}
+	}
+
+	/**
+	 * Give Yoast SEO the post's locale, so its og:locale tag matches the content.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param mixed $locale Locale Yoast is about to normalise for og:locale.
+	 *
+	 * @return mixed The post's locale, or the input unchanged.
+	 */
+	public function filter_yoast_locale( mixed $locale ): mixed {
+		$language = $this->get_current_post_language();
+
+		return DEFAULT_LANGUAGE !== $language ? $language : $locale;
+	}
+
+	/**
+	 * Give Yoast SEO schema pieces about the page the post's language, leaving WebSite as is.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param mixed $language BCP 47 language Yoast is about to set as inLanguage.
+	 * @param mixed $data     The schema piece.
+	 *
+	 * @return mixed The post's language as BCP 47, or the input unchanged.
+	 */
+	public function filter_yoast_schema_language( mixed $language, mixed $data = null ): mixed {
+		$result    = $language;
+		$post_lang = $this->get_current_post_language();
+		$types     = is_array( $data ) && isset( $data['@type'] ) ? (array) $data['@type'] : array();
+
+		if ( DEFAULT_LANGUAGE !== $post_lang && ! in_array( 'WebSite', $types, true ) ) {
+			$result = locale_to_bcp47( $post_lang );
+		}
+
+		return $result;
 	}
 
 	/**

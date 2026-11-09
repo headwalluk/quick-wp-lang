@@ -91,6 +91,8 @@ class Plugin {
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_hreflang_tags' ), PRIORITY_WP_HEAD );
 			add_action( 'wp_head', array( $this->get_public_hooks(), 'output_og_locale' ), PRIORITY_WP_HEAD );
 			add_action( 'send_headers', array( $this->get_public_hooks(), 'send_content_language_header' ) );
+			add_filter( 'wpseo_locale', array( $this->get_public_hooks(), 'filter_yoast_locale' ) );
+			add_filter( 'wpseo_schema_piece_language', array( $this->get_public_hooks(), 'filter_yoast_schema_language' ), 10, 2 );
 		}
 	}
 

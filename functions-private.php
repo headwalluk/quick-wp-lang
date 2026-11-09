@@ -119,19 +119,16 @@ function get_enabled_languages_list(): array {
 /**
  * Get the post types ticked on the settings page, before the supported-post-types filter.
  *
+ * Posts and pages until the settings page is first saved; an empty selection is kept as empty.
+ *
  * @since 1.3.0
  *
  * @return array<string> Post type names.
  */
 function get_enabled_post_types(): array {
-	$enabled_post_types = get_option( OPTION_ENABLED_POST_TYPES, array() );
-	$enabled_post_types = is_array( $enabled_post_types ) ? $enabled_post_types : array();
+	$enabled_post_types = get_option( OPTION_ENABLED_POST_TYPES, DEFAULT_POST_TYPES );
 
-	if ( empty( $enabled_post_types ) ) {
-		$enabled_post_types = DEFAULT_POST_TYPES;
-	}
-
-	return $enabled_post_types;
+	return is_array( $enabled_post_types ) ? array_values( array_filter( $enabled_post_types, 'is_string' ) ) : DEFAULT_POST_TYPES;
 }
 
 /**

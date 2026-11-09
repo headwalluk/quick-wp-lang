@@ -89,7 +89,7 @@ class Settings {
 			array(
 				'type'              => 'array',
 				'sanitize_callback' => array( $this, 'sanitize_enabled_post_types' ),
-				'default'           => array(),
+				'default'           => DEFAULT_POST_TYPES,
 			)
 		);
 
@@ -278,7 +278,7 @@ class Settings {
 
 		printf(
 			'<p class="description qwl-field-help">%s</p>',
-			esc_html__( 'Select which post types should display the language meta box. If no post types are selected, all public post types will be enabled by default.', 'quick-wp-lang' )
+			esc_html__( 'Select which post types show the language box in the editor and the Language column in the list of posts. Untick them all to hide both everywhere.', 'quick-wp-lang' )
 		);
 	}
 
