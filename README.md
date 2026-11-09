@@ -1,177 +1,69 @@
 # Quick WP Lang
 
-![Version](https://img.shields.io/badge/version-1.2.1-blue.svg)
-![WordPress](https://img.shields.io/badge/wordpress-6.0%2B-blue.svg)
-![PHP](https://img.shields.io/badge/php-8.0%2B-purple.svg)
-![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)
-![HPOS Compatible](https://img.shields.io/badge/WooCommerce-HPOS%20Compatible-96588a.svg)
+[![Version](https://img.shields.io/github/v/release/headwalluk/quick-wp-lang?label=version&color=blue)](https://github.com/headwalluk/quick-wp-lang/releases/latest)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-purple.svg)](https://www.php.net/)
+[![WordPress](https://img.shields.io/badge/WordPress-7.1+-21759B.svg)](https://wordpress.org/)
+[![License](https://img.shields.io/badge/license-GPL--2.0+-green.svg)](LICENSE)
+[![Coding Standards](https://img.shields.io/badge/WordPress-Coding%20Standards-blue.svg)](https://github.com/WordPress/WordPress-Coding-Standards)
 
-**Version:** 1.2.1
-**Requires WordPress:** 6.0+  
-**Requires PHP:** 8.0+  
-**License:** GPL v2 or later
+Set the language of individual posts, pages and custom post types for SEO, and link translations to their original, without a full multilingual setup.
 
-Assign alternative languages to individual posts, pages, and custom post types for better SEO without requiring a full multilingual setup.
+## What it does
 
----
+For a site in one language with some content in others — an English (UK) site with a few French pages, say:
 
-## Overview
+- Sets `<html lang>` on each page to the content's language
+- Links a translation to its original, so **both** pages list every version in `hreflang` tags, with `x-default` pointing at the original
+- Sends a `Content-Language` HTTP header (optional)
+- Gets `og:locale` right, and with Yoast SEO, the schema `inLanguage` too
+- Leaves canonical URLs, sitemaps and permalinks alone: each version stays indexable at its own URL
 
-**Quick WP Lang** is a lightweight WordPress plugin that lets you assign an alternative language to individual posts, pages, or custom post types (including WooCommerce products) without requiring a full multilingual setup.
+It doesn't translate anything or create copies of posts. See [how it works](docs/how-it-works.md).
 
-### The Problem
+## Install
 
-Your site runs in a primary language (e.g., English UK) but you have a handful of pages written in another language (e.g., Polish, German). Without per-page language metadata, search engines see every page as the site default language, harming SEO for those alternative-language pages.
+### Standard plugin
 
-### The Solution
+1. Download `quick-wp-lang.zip` from the [latest release](https://github.com/headwalluk/quick-wp-lang/releases/latest)
+2. WordPress admin → Plugins → Add New → Upload Plugin → choose the zip → Install Now → Activate
+3. Settings → Content Language → tick the languages you need
+4. Edit a post, pick its language in the **Content Language** box and, for a translation, the page it translates
 
-A simple meta box in the post editor lets you pick a language. On the front end, the plugin adjusts the page's `<html lang="">` attribute, outputs the correct `hreflang` meta tag, and sets the `Content-Language` HTTP header — all scoped to that single post.
+After install, the plugin receives future updates automatically through the bundled GitHub updater.
 
-### Important Distinction
+### Must-use plugin
 
-This is **not** a translation plugin. There is no concept of "the same content in multiple languages". When a post is assigned an alternative language, that content exists **only** in that language — there is no counterpart in the site's default language. This is for ad-hoc alternative language provision for individual pieces of singular content.
+1. Extract the `quick-wp-lang` folder into `wp-content/mu-plugins/`
+2. WordPress doesn't load plugins from subfolders of `mu-plugins/`, so create `wp-content/mu-plugins/quick-wp-lang-loader.php` to load it:
 
----
+   ```php
+   <?php
+   require_once __DIR__ . '/quick-wp-lang/quick-wp-lang.php';
+   ```
 
-## Features
+3. Settings → Content Language to configure
 
-- ✅ **Simple Meta Box** — Select language from a curated list of 50+ common languages
-- ✅ **Settings Page** — Enable only the languages you need (reduces clutter)
-- ✅ **Language Search** — Filter available languages by name or code on settings page
-- ✅ **Smart Grouping** — Enabled languages automatically float to top of list
-- ✅ **Radio Button UI** — Clean, accessible interface in the post editor sidebar
-- ✅ **SEO Optimized** — Automatically adjusts `lang` attribute, hreflang tags, and `og:locale`
-- ✅ **SEO Plugin Compatible** — Detects Yoast SEO, Rank Math, and All in One SEO
-- ✅ **WooCommerce Compatible** — Works with WooCommerce products (HPOS compatible)
-- ✅ **Developer Friendly** — Extensible via filters, follows WordPress Coding Standards
-- ✅ **No Build Step** — Pure PHP, no JavaScript compilation required
-- ✅ **Translation Ready** — Fully internationalized with text domain `quick-wp-lang`
-
----
-
-## Installation
-
-1. Clone or download this repository to `/wp-content/plugins/quick-wp-lang/`
-2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Go to **Settings → Content Language** to enable your desired languages
-4. Edit any post or page and select a language from the **Content Language** meta box
-
----
-
-## Usage
-
-### 1. Configure Available Languages
-
-Go to **Settings → Content Language** and check the languages you want to make available. This keeps the meta box clean and focused.
-
-### 2. Assign Language to Content
-
-1. Edit any post, page, or custom post type
-2. Look for the **Content Language** meta box in the sidebar
-3. Select the appropriate language (or keep "Site Default")
-4. Save/publish the post
-
-### 3. Front-End Output
-
-The plugin automatically handles:
-
-- `<html lang="de-DE">` attribute override
-- `<link rel="alternate" hreflang="de-DE" href="..." />` tag
-- `Content-Language: de-DE` HTTP header
-- `<meta property="og:locale" content="de_DE" />` tag (if no SEO plugin is active)
-
----
-
-## Technical Details
-
-### Post Meta Key
-
-- **Key:** `_qwl_language`
-- **Value:** WordPress locale string (e.g., `pl_PL`, `de_DE`) or empty for site default
-- **Prefix:** Underscore-prefixed to hide from Custom Fields UI
-
-### Locale Format Conversion
-
-WordPress uses `en_GB`, BCP 47 uses `en-GB`. The plugin automatically converts via `str_replace( '_', '-', $locale )`.
-
-### Filters
-
-#### `quick_wp_lang_languages`
-
-Modify the available languages list.
-
-```php
-add_filter( 'quick_wp_lang_languages', function( $languages ) {
-    $languages['cy'] = __( 'Welsh', 'quick-wp-lang' );
-    return $languages;
-} );
-```
-
-#### `quick_wp_lang_supported_post_types`
-
-Modify which post types show the meta box and language column.
-
-```php
-add_filter( 'quick_wp_lang_supported_post_types', function( $post_types ) {
-    unset( $post_types['attachment'] );
-    return $post_types;
-} );
-```
-
----
-
-## Development
+WordPress doesn't update must-use plugins, so the bundled updater doesn't apply. Update by replacing the `quick-wp-lang` folder with the one from a newer release.
 
 ### Requirements
 
-- PHP 8.0+
-- WordPress 6.0+
+- WordPress 7.1 or later
+- PHP 8.2 or later
 
-### Code Standards
+## Documentation
 
-This plugin follows [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/).
+Full user and developer documentation lives in [`docs/`](docs/):
 
-```bash
-# Check code standards
-phpcs
+- [How it works](docs/how-it-works.md)
+- [Configuration](docs/configuration.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Hooks and filters](docs/developers/hooks-and-filters.md) *(for developers)*
+- [Extending Quick WP Lang](docs/developers/extending.md) *(for developers)*
 
-# Auto-fix issues
-phpcbf
-```
+## Security disclosures
 
-### File Structure
-
-```
-quick-wp-lang/
-├── quick-wp-lang.php          # Main plugin file
-├── constants.php               # Plugin constants
-├── functions-private.php       # Private helper functions
-├── includes/
-│   ├── class-plugin.php        # Bootstrap & hook registration
-│   ├── class-settings.php      # Settings page
-│   ├── class-admin-hooks.php   # Meta box render/save
-│   ├── class-public-hooks.php  # Front-end lang overrides
-│   └── functions-languages.php # Language list helpers
-├── dev-notes/                  # Development documentation
-│   ├── patterns/               # Code patterns
-│   └── workflows/              # Development workflows
-└── languages/                  # Translation files
-```
-
----
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history.
-
----
+See [SECURITY.md](SECURITY.md) for the responsible-disclosure process.
 
 ## License
 
-This plugin is licensed under the [GPL v2 or later](https://www.gnu.org/licenses/gpl-2.0.html).
-
----
-
-## Support
-
-For issues, questions, or feature requests, please contact [Headwall](https://headwall.tech) or open an issue in this repository.
+GPL v2 or later. See [LICENSE](LICENSE).

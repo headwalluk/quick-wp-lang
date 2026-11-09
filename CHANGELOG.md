@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Link a translation to its original.** A new *Translation of* field in the Content Language box links, say, a French page to the English page it translates. Both pages then output the full set of hreflang tags — the original under the site's language, every published translation, and `x-default` pointing at the original — so search engines treat them as versions of each other. The original's box lists its translations. See `docs/how-it-works.md`.
+- **Yoast SEO integration.** With Yoast active, its `og:locale` tag and the schema `inLanguage` (every piece except `WebSite`) now follow the post's language, instead of always showing the site's.
+- **A "Delete all plugin data when uninstalled" setting**, under **Settings → Content Language → Uninstall**, off by default.
+- **Automatic updates from GitHub releases**, through the updater shared with Quick 2FA. The new `quick_wp_lang_updater_enabled` filter turns them off. Earlier versions never offered updates.
+- Documentation in `docs/`: how it works, configuration, troubleshooting, and the hooks reference.
+
+### Changed
+
+- **Requires PHP 8.2 and WordPress 7.1**, up from PHP 8.0 and WordPress 6.0.
+- **Deleting the plugin no longer removes its data unless the new setting is ticked.** Until now, deleting it always removed the settings and every post's language.
+- **Unticking every post type is now kept as "none".** Previously an empty selection silently reverted to posts and pages, and the help text wrongly said it meant all public post types.
+- The plugin's notice-dismiss script and styles now load from `assets/admin/` files instead of being printed inline. The settings script is now `assets/admin/settings.js`, with the handle `quick-wp-lang-settings` (was `qwl-settings-search`).
+- Internal restructure to match the maintainer's reference plugin: a `Plugin::instance()` singleton, helpers merged into `functions-private.php`, renamed PHP constants (`OPTION_*`, `DEFAULT_*`). Stored option and meta names are unchanged. The global constants `QUICK_WP_LANG_PLUGIN_FILE`, `QUICK_WP_LANG_PLUGIN_DIR` and `QUICK_WP_LANG_PLUGIN_URL` are replaced by `QUICK_WP_LANG_FILE`, `QUICK_WP_LANG_PATH`, `QUICK_WP_LANG_URL` and `QUICK_WP_LANG_BASENAME`.
+- Hook callbacks on WordPress and third-party hooks now accept any argument type and pass through values they can't use, instead of risking a `TypeError` from a misbehaving caller.
+- Short interface strings now carry translator context, and the "X of Y languages enabled" count uses proper plural forms.
+
+### Fixed
+
+- The hreflang URL dropped the permalink's trailing slash, so it didn't match the canonical URL; with plain permalinks it pointed every page at the home page. Introduced in 1.0.0.
+- The Language column ignored a `quick_wp_lang_supported_post_types` filter added by a theme, because it was registered before themes load. Introduced in 1.0.0.
+- Dismissing the "no languages enabled" notice only stuck on the dashboard and list screens; elsewhere it came back on the next page load. Introduced in 1.0.0.
+
+---
+
 ## [1.2.1] - 2026-02-25
 
 ### Fixed

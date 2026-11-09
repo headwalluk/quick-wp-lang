@@ -1,95 +1,81 @@
 === Quick WP Lang ===
 Contributors: headwall
 Tags: language, hreflang, seo, multilingual, locale
-Requires at least: 6.0
-Tested up to: 6.7
-Requires PHP: 8.0
+Requires at least: 7.1
+Tested up to: 7.1
+Requires PHP: 8.2
 Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Assign alternative languages to individual posts, pages, and custom post types for better SEO without requiring a full multilingual setup.
+Set the language of individual posts and pages for SEO, and link translations to their original, without a full multilingual setup.
 
 == Description ==
 
-**Quick WP Lang** is a lightweight WordPress plugin that lets you assign an alternative language to individual posts, pages, or custom post types (including WooCommerce products) without requiring a full multilingual setup.
+**Quick WP Lang** is for a site that runs in one language but has some content in others: an English (UK) site with a few pages in French, say. Without per-page language information, search engines treat every page as being in the site's language, and can't tell that the French page is the French version of an English one.
 
-= The Problem =
+A **Content Language** box in the editor lets you set a post's language and, for a translation, pick the page it translates. On the front end the plugin then:
 
-Your site runs in a primary language (e.g., English UK) but you have a handful of pages written in another language (e.g., Polish, German). Without per-page language metadata, search engines see every page as the site default language, harming SEO for those alternative-language pages.
+* Sets `<html lang>` to the content's language
+* Outputs `hreflang` tags on **both** the original and its translations, listing every version and an `x-default`
+* Sends a `Content-Language` HTTP header (optional)
+* Sets `og:locale`, and with Yoast SEO, the schema `inLanguage`
 
-= The Solution =
+Canonical URLs, sitemaps and permalinks are left alone, so each version stays indexable at its own URL.
 
-A simple meta box in the post editor lets you pick a language. On the front end, the plugin adjusts the page's `<html lang="">` attribute, outputs the correct `hreflang` meta tag, and sets the `Content-Language` HTTP header — all scoped to that single post.
+= What it isn't =
 
-= Important Distinction =
-
-This is **not** a translation plugin. There is no concept of "the same content in multiple languages". When a post is assigned an alternative language, that content exists **only** in that language — there is no counterpart in the site's default language. This is for ad-hoc alternative language provision for individual pieces of singular content.
+It isn't a translation plugin. It doesn't translate content, create copies of posts, add language switchers or change URLs. If you need those, use a full multilingual plugin instead; don't run the two together.
 
 = Features =
 
-* **Simple Meta Box** — Select language from a curated list of 50+ common languages
-* **Settings Page** — Enable only the languages you need, with search and filtering
-* **Post Type Control** — Choose which post types display the language meta box
-* **Radio Button UI** — Clean, accessible interface in the post editor sidebar
-* **SEO Optimized** — Automatically adjusts `lang` attribute, hreflang tags, and `og:locale`
-* **SEO Plugin Compatible** — Detects Yoast SEO, Rank Math, and All in One SEO
-* **WooCommerce Compatible** — Works with WooCommerce products (HPOS compatible)
-* **Developer Friendly** — Extensible via filters, follows WordPress Coding Standards
-* **No Build Step** — Pure PHP, no JavaScript compilation required
-* **Translation Ready** — Fully internationalized with text domain `quick-wp-lang`
-
-= How It Works =
-
-1. Go to **Settings → Content Language** and enable the languages you want to use
-2. Edit any post, page, or custom post type
-3. In the **Content Language** meta box, select the appropriate language
-4. Save the post
-5. The front end automatically updates language attributes for better SEO
-
-= Technical Details =
-
-* Adjusts `<html lang="">` attribute via `language_attributes` filter
-* Outputs self-referencing `<link rel="alternate" hreflang="..." />` tag
-* Sends `Content-Language` HTTP header
-* Overrides `og:locale` meta tag (when no SEO plugin is active)
-* Converts WordPress locale format (`de_DE`) to BCP 47 (`de-DE`)
-* Works on singular views only (`is_singular()`)
+* Curated list of 50+ languages; enable only the ones you need, with search
+* Choose which post types (including WooCommerce products and custom post types) show the language box
+* Link translations to their original for reciprocal hreflang
+* Sortable Language column in the list of posts
+* Works with Yoast SEO, Rank Math and All in One SEO
+* Keeps all data on uninstall unless you choose otherwise
+* Automatic updates from GitHub releases
+* Translation ready; extensible through filters
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/quick-wp-lang/` directory, or install through the WordPress plugins screen
-2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Go to **Settings → Content Language** to enable your desired languages
-4. Edit any post or page and select a language from the **Content Language** meta box
+1. Upload the plugin to `/wp-content/plugins/quick-wp-lang/`, or install the release zip through Plugins → Add New → Upload Plugin
+2. Activate the plugin through the Plugins screen
+3. Go to **Settings → Content Language** and tick the languages you need
+4. Edit a post or page, choose its language in the **Content Language** box and, for a translation, the page it translates
 
 == Frequently Asked Questions ==
 
-= Is this a translation plugin? =
+= Should I set a translation's canonical URL to the original? =
 
-No. This plugin does not translate content or manage multilingual versions of the same post. It simply allows you to assign a language to individual posts for SEO purposes.
+No. A canonical tells search engines a page is a duplicate to drop from the index, so the translation would stop appearing in results. Keep each page's own canonical and link the translation to its original instead; the hreflang tags say they are versions of each other.
+
+= Should I exclude translations from the sitemap? =
+
+No. Leave them in, so search engines find them.
 
 = Which post types are supported? =
 
-Posts and pages by default. You can enable additional post types (including WooCommerce products and custom post types) under **Settings → Content Language**. Developers can also use the `quick_wp_lang_supported_post_types` filter for further customization.
+Posts and pages by default. Enable others under **Settings → Content Language**, or with the `quick_wp_lang_supported_post_types` filter.
 
 = Will this work with my SEO plugin? =
 
-Yes. The plugin detects Yoast SEO, Rank Math, and All in One SEO, and defers to them for `og:locale` output to avoid conflicts.
-
-= Does this work with WooCommerce? =
-
-Yes. The plugin is fully HPOS (High-Performance Order Storage) compatible and works with WooCommerce products.
+Yes. None of Yoast SEO, Rank Math or All in One SEO outputs hreflang, so there is no conflict. With Yoast SEO, its `og:locale` and schema follow the post's language; with the other two, their `og:locale` keeps the site's language.
 
 = Can I add more languages? =
 
-Yes. Use the `quick_wp_lang_languages` filter to add or modify the available languages programmatically.
+Yes, with the `quick_wp_lang_languages` filter.
+
+= What happens to my data if I delete the plugin? =
+
+It is kept, unless **Delete all plugin data when uninstalled** is ticked on the settings page.
 
 == Screenshots ==
 
 1. Settings page — Enable only the languages you need
-2. Meta box in post editor — Clean radio button interface
-3. Front-end output — Proper language attributes and hreflang tags
+2. Content Language box in the editor
+3. Front-end output — Language attributes and hreflang tags
 
 == Changelog ==
 
