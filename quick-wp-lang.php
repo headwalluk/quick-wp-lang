@@ -36,6 +36,12 @@ require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-settings.php';
 require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-admin-hooks.php';
 require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-public-hooks.php';
 
+// GitHub auto-updates (admin, cron and WP-CLI only — no need to load on front-end requests).
+if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+	require_once QUICK_WP_LANG_PLUGIN_DIR . '/includes/class-github-updater.php';
+	new Quick_WP_Lang\Github_Updater( QUICK_WP_LANG_PLUGIN_FILE, Quick_WP_Lang\UPDATER_GITHUB_REPO, QUICK_WP_LANG_VERSION, 'quick_wp_lang_updater_enabled' );
+}
+
 /**
  * Initialize and run the plugin.
  *

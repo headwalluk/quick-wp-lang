@@ -36,3 +36,6 @@ const OPT_DISMISSED_NOTICES = 'qwl_dismissed_notices';
 // Filter/action hook priorities.
 const PRIORITY_LANGUAGE_ATTRIBUTES = 999;
 const PRIORITY_WP_HEAD             = 1;
+
+// GitHub repository the updater checks for releases.
+const UPDATER_GITHUB_REPO = 'headwalluk/quick-wp-lang';
