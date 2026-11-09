@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Quick WP Lang
  * Plugin URI: https://github.com/headwalluk/quick-wp-lang
- * Description: Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO.
- * Version: 1.2.1
+ * Description: Set the language of individual posts, pages and custom post types for SEO, and link translations to their original, without a full multilingual setup.
+ * Version: 1.3.0
  * Requires at least: 7.1
  * Requires PHP: 8.2
  * Author: Paul Faulkner
@@ -19,7 +19,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || die();
 
-define( 'QUICK_WP_LANG_VERSION', '1.2.1' );
+define( 'QUICK_WP_LANG_VERSION', '1.3.0' );
 define( 'QUICK_WP_LANG_FILE', __FILE__ );
 define( 'QUICK_WP_LANG_PATH', plugin_dir_path( __FILE__ ) );
 define( 'QUICK_WP_LANG_URL', plugin_dir_url( __FILE__ ) );

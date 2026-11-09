@@ -4,7 +4,7 @@ Tags: language, hreflang, seo, multilingual, locale
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,18 @@ It is kept, unless **Delete all plugin data when uninstalled** is ticked on the 
 3. Front-end output — Language attributes and hreflang tags
 
 == Changelog ==
+
+= 1.3.0 - 2026-11-09 =
+* Added: Link a translation to its original ("Translation of" in the Content Language box). Both pages then output reciprocal hreflang tags with x-default
+* Added: With Yoast SEO, og:locale and schema inLanguage follow the post's language
+* Added: "Delete all plugin data when uninstalled" setting, off by default
+* Added: Automatic updates from GitHub releases; filter quick_wp_lang_updater_enabled
+* Changed: Requires PHP 8.2 and WordPress 7.1
+* Changed: Deleting the plugin keeps its data unless the new setting is ticked
+* Changed: Unticking every post type now means none, instead of reverting to posts and pages
+* Fixed: hreflang URL now matches the permalink (it dropped the trailing slash, and broke with plain permalinks)
+* Fixed: Language column now honours a theme's quick_wp_lang_supported_post_types filter
+* Fixed: Dismissing the no-languages notice now sticks on every admin screen
 
 = 1.2.1 - 2026-02-25 =
 * Fixed: AJAX notice dismiss now validates notice ID against allowlist
@@ -154,6 +166,9 @@ It is kept, unless **Delete all plugin data when uninstalled** is ticked on the 
 * Settings class instantiated early (before `admin_init`)
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Requires PHP 8.2 and WordPress 7.1. Adds translation linking for reciprocal hreflang. Deleting the plugin now keeps its data unless you tick the new Uninstall setting. Clear any page cache after upgrading.
 
 = 1.2.1 =
 Security hardening and minor code cleanup.

@@ -10,6 +10,7 @@ msgstr ""
 "POT-Creation-Date: 2026-02-12T20:02:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: quick-wp-lang\n"
 
@@ -18,305 +19,262 @@ msgstr ""
 msgid "Quick WP Lang"
 msgstr "Quick WP Lang"
 
-#. Description of the plugin
-#: quick-wp-lang.php
-msgid "Assign alternative languages to individual posts, pages, and custom post types without requiring a full multilingual setup. Automatically adjusts hreflang tags and language attributes for better SEO."
-msgstr "Assegna lingue alternative a singoli post, pagine e tipi di post personalizzati senza richiedere una configurazione multilingue completa. Regola automaticamente i tag hreflang e gli attributi linguistici per un miglior posizionamento SEO."
-
-#: includes/class-admin-hooks.php:35
-#: includes/class-settings.php:43
-msgid "Content Language"
-msgstr "Lingua dei contenuti"
-
-#: includes/class-admin-hooks.php:66
+#: includes/class-admin-hooks.php:52
 msgid "Select the language for this content:"
 msgstr "Seleziona la lingua per questo contenuto:"
 
-#: includes/class-admin-hooks.php:77
-msgid "Site Default"
-msgstr "Impostazioni predefinite del sito"
-
-#: includes/class-admin-hooks.php:98
-msgid "Configure available languages →"
-msgstr "Configura le lingue disponibili →"
-
-#: includes/class-admin-hooks.php:104
+#: includes/class-admin-hooks.php:88
 msgid "If this content is written in a language other than the site default, select it here. This will update the page's language attributes and hreflang tags for better SEO."
 msgstr "Se questo contenuto è scritto in una lingua diversa da quella predefinita del sito, selezionala qui. In questo modo verranno aggiornati gli attributi linguistici della pagina e i tag hreflang per un miglior posizionamento SEO."
 
-#: includes/class-admin-hooks.php:218
-msgid "Quick WP Lang:"
-msgstr "Quick WP Lang:"
-
-#: includes/class-admin-hooks.php:219
+#: includes/class-admin-hooks.php:319
 msgid "No languages are enabled yet."
 msgstr "Non sono ancora state abilitate lingue."
 
-#: includes/class-admin-hooks.php:221
-msgid "Configure your languages to get started →"
-msgstr "Configura le tue lingue per iniziare →"
-
-#: includes/class-admin-hooks.php:282
-msgid "Language"
-msgstr "Lingua"
-
-#: includes/class-admin-hooks.php:311
-msgid "—"
-msgstr "—"
-
-#: includes/class-settings.php:42
+#: includes/class-settings.php:38
 msgid "Content Language Settings"
 msgstr "Impostazioni lingua dei contenuti"
 
-#: includes/class-settings.php:70
+#: includes/class-settings.php:108
 msgid "Available Languages"
 msgstr "Lingue disponibili"
 
-#: includes/class-settings.php:77
-#: includes/class-settings.php:137
+#: includes/class-settings.php:131
+#: includes/class-settings.php:244
 msgid "Enable Languages"
 msgstr "Abilita lingue"
 
-#: includes/class-settings.php:95
+#: includes/class-settings.php:184
 msgid "You do not have permission to access this page."
 msgstr "Non hai il permesso di accedere a questa pagina."
 
-#: includes/class-settings.php:104
-msgid "Save Languages"
-msgstr "Salva lingue"
-
-#: includes/class-settings.php:120
+#: includes/class-settings.php:207
 msgid "Select the languages you want to make available for content assignment. These will appear as options in post/page editor sidebars."
 msgstr "Seleziona le lingue che desideri rendere disponibili per l'assegnazione dei contenuti. Queste appariranno come opzioni nelle barre laterali dell'editor dei post/delle pagine."
 
-#: includes/class-settings.php:159
+#: includes/class-settings.php:273
 msgid "Select at least one language to enable language selection in your posts and pages."
 msgstr "Seleziona almeno una lingua per abilitare la selezione della lingua nei tuoi post e nelle tue pagine."
 
-#: includes/functions-languages.php:24
+#: functions-private.php:26
 msgid "Afrikaans"
 msgstr "afrikaans"
 
-#: includes/functions-languages.php:25
+#: functions-private.php:27
 msgid "Arabic"
 msgstr "Arabo"
 
-#: includes/functions-languages.php:26
+#: functions-private.php:28
 msgid "Bulgarian"
 msgstr "bulgaro"
 
-#: includes/functions-languages.php:27
+#: functions-private.php:29
 msgid "Catalan"
 msgstr "catalano"
 
-#: includes/functions-languages.php:28
+#: functions-private.php:30
 msgid "Czech"
 msgstr "Ceco"
 
-#: includes/functions-languages.php:29
+#: functions-private.php:31
 msgid "Welsh"
 msgstr "gallese"
 
-#: includes/functions-languages.php:30
+#: functions-private.php:32
 msgid "Danish"
 msgstr "danese"
 
-#: includes/functions-languages.php:31
+#: functions-private.php:33
 msgid "German"
 msgstr "Tedesco"
 
-#: includes/functions-languages.php:32
+#: functions-private.php:34
 msgid "German (Switzerland)"
 msgstr "Tedesco (Svizzera)"
 
-#: includes/functions-languages.php:33
+#: functions-private.php:35
 msgid "German (Austria)"
 msgstr "Tedesco (Austria)"
 
-#: includes/functions-languages.php:34
+#: functions-private.php:36
 msgid "Greek"
 msgstr "greco"
 
-#: includes/functions-languages.php:35
+#: functions-private.php:37
 msgid "English (UK)"
 msgstr "Inglese (Regno Unito)"
 
-#: includes/functions-languages.php:36
+#: functions-private.php:38
 msgid "English (US)"
 msgstr "Inglese (Stati Uniti)"
 
-#: includes/functions-languages.php:37
+#: functions-private.php:39
 msgid "English (Australia)"
 msgstr "Inglese (Australia)"
 
-#: includes/functions-languages.php:38
+#: functions-private.php:40
 msgid "English (Canada)"
 msgstr "Inglese (Canada)"
 
-#: includes/functions-languages.php:39
+#: functions-private.php:41
 msgid "Esperanto"
 msgstr "Speranza"
 
-#: includes/functions-languages.php:40
+#: functions-private.php:42
 msgid "Spanish (Spain)"
 msgstr "Spagnolo (Spagna)"
 
-#: includes/functions-languages.php:41
+#: functions-private.php:43
 msgid "Spanish (Mexico)"
 msgstr "Spagnolo (Messico)"
 
-#: includes/functions-languages.php:42
+#: functions-private.php:44
 msgid "Spanish (Argentina)"
 msgstr "Spagnolo (Argentina)"
 
-#: includes/functions-languages.php:43
+#: functions-private.php:45
 msgid "Estonian"
 msgstr "Estone"
 
-#: includes/functions-languages.php:44
+#: functions-private.php:46
 msgid "Basque"
 msgstr "Basco"
 
-#: includes/functions-languages.php:45
+#: functions-private.php:47
 msgid "Persian"
 msgstr "persiano"
 
-#: includes/functions-languages.php:46
+#: functions-private.php:48
 msgid "Finnish"
 msgstr "finlandese"
 
-#: includes/functions-languages.php:47
+#: functions-private.php:49
 msgid "French (France)"
 msgstr "Francese (Francia)"
 
-#: includes/functions-languages.php:48
+#: functions-private.php:50
 msgid "French (Canada)"
 msgstr "Francese (Canada)"
 
-#: includes/functions-languages.php:49
+#: functions-private.php:51
 msgid "Hebrew"
 msgstr "Ebraico"
 
-#: includes/functions-languages.php:50
+#: functions-private.php:52
 msgid "Hindi"
 msgstr "No"
 
-#: includes/functions-languages.php:51
+#: functions-private.php:53
 msgid "Croatian"
 msgstr "croato"
 
-#: includes/functions-languages.php:52
+#: functions-private.php:54
 msgid "Hungarian"
 msgstr "Ungherese"
 
-#: includes/functions-languages.php:53
+#: functions-private.php:55
 msgid "Indonesian"
 msgstr "Indonesiano"
 
-#: includes/functions-languages.php:54
+#: functions-private.php:56
 msgid "Icelandic"
 msgstr "islandese"
 
-#: includes/functions-languages.php:55
+#: functions-private.php:57
 msgid "Italian"
 msgstr "italiano"
 
-#: includes/functions-languages.php:56
+#: functions-private.php:58
 msgid "Japanese"
 msgstr "giapponese"
 
-#: includes/functions-languages.php:57
+#: functions-private.php:59
 msgid "Korean"
 msgstr "Coreano"
 
-#: includes/functions-languages.php:58
+#: functions-private.php:60
 msgid "Lithuanian"
 msgstr "Lituano"
 
-#: includes/functions-languages.php:59
+#: functions-private.php:61
 msgid "Latvian"
 msgstr "Latvian"
 
-#: includes/functions-languages.php:60
+#: functions-private.php:62
 msgid "Dutch"
 msgstr "Olandese"
 
-#: includes/functions-languages.php:61
+#: functions-private.php:63
 msgid "Dutch (Belgium)"
 msgstr "Olandese (Belgio)"
 
-#: includes/functions-languages.php:62
+#: functions-private.php:64
 msgid "Norwegian"
 msgstr "Norvegese"
 
-#: includes/functions-languages.php:63
+#: functions-private.php:65
 msgid "Polish"
 msgstr "Polacco"
 
-#: includes/functions-languages.php:64
+#: functions-private.php:66
 msgid "Portuguese (Brazil)"
 msgstr "Portoghese (Brasile)"
 
-#: includes/functions-languages.php:65
+#: functions-private.php:67
 msgid "Portuguese (Portugal)"
 msgstr "Portoghese (Portogallo)"
 
-#: includes/functions-languages.php:66
+#: functions-private.php:68
 msgid "Romanian"
 msgstr "Rumeno"
 
-#: includes/functions-languages.php:67
+#: functions-private.php:69
 msgid "Russian"
 msgstr "russo"
 
-#: includes/functions-languages.php:68
+#: functions-private.php:70
 msgid "Slovak"
 msgstr "Slovacco"
 
-#: includes/functions-languages.php:69
+#: functions-private.php:71
 msgid "Slovenian"
 msgstr "Slovenia"
 
-#: includes/functions-languages.php:70
+#: functions-private.php:72
 msgid "Albanian"
 msgstr "albanese"
 
-#: includes/functions-languages.php:71
+#: functions-private.php:73
 msgid "Serbian"
 msgstr "serbo"
 
-#: includes/functions-languages.php:72
+#: functions-private.php:74
 msgid "Swedish"
 msgstr "Svedese"
 
-#: includes/functions-languages.php:73
+#: functions-private.php:75
 msgid "Thai"
 msgstr "tailandese"
 
-#: includes/functions-languages.php:74
+#: functions-private.php:76
 msgid "Turkish"
 msgstr "turco"
 
-#: includes/functions-languages.php:75
+#: functions-private.php:77
 msgid "Ukrainian"
 msgstr "ucraino"
 
-#: includes/functions-languages.php:76
+#: functions-private.php:78
 msgid "Vietnamese"
 msgstr "Vietnamita"
 
-#: includes/functions-languages.php:77
+#: functions-private.php:79
 msgid "Chinese (Simplified)"
 msgstr "Cinese (semplificato)"
 
-#: includes/functions-languages.php:78
+#: functions-private.php:80
 msgid "Chinese (Traditional)"
 msgstr "Cinese (tradizionale)"
-
-#. Plugin URI of the plugin
-#: quick-wp-lang.php
-msgid "https://headwall-hosting.com/plugins/quick-wp-lang/"
-msgstr "https://headwall-hosting.com/plugins/quick-wp-lang/"
 
 #. Author of the plugin
 #: quick-wp-lang.php
@@ -327,3 +285,141 @@ msgstr "Paul Faulkner"
 #: quick-wp-lang.php
 msgid "https://headwall-hosting.com/"
 msgstr "https://headwall-hosting.com/"
+
+#. Plugin URI of the plugin
+#: quick-wp-lang.php
+msgid "https://github.com/headwalluk/quick-wp-lang"
+msgstr "https://github.com/headwalluk/quick-wp-lang"
+
+#. Description of the plugin
+#: quick-wp-lang.php
+msgid "Set the language of individual posts, pages and custom post types for SEO, and link translations to their original, without a full multilingual setup."
+msgstr "Set the language of individual posts, pages and custom post types for SEO, and link translations to their original, without a full multilingual setup."
+
+#: includes/class-admin-hooks.php:29
+msgctxt "meta box title"
+msgid "Content Language"
+msgstr "Lingua del contenuto"
+
+#: includes/class-admin-hooks.php:62
+msgctxt "language choice"
+msgid "Site default"
+msgstr "Impostazione predefinita del sito"
+
+#: includes/class-admin-hooks.php:83
+msgid "Configure available languages"
+msgstr "Configura le lingue disponibili"
+
+#: includes/class-admin-hooks.php:113
+msgctxt "meta box field label; the original this content translates"
+msgid "Translation of"
+msgstr "Traduzione di"
+
+#: includes/class-admin-hooks.php:119
+msgctxt "no original selected"
+msgid "— Not linked —"
+msgstr "— Nessun collegamento —"
+
+#. translators: %s: Name of the site's language, e.g. "English (UK)".
+#: includes/class-admin-hooks.php:138
+#, php-format
+msgid "The %s version of this content. Both pages then list each other in their hreflang tags, so search engines show visitors the right one."
+msgstr "La versione %s di questo contenuto. Entrambe le pagine si indicano a vicenda nei propri tag hreflang, in modo che i motori di ricerca mostrino ai visitatori quella corretta."
+
+#: includes/class-admin-hooks.php:161
+msgctxt "meta box heading; list of linked translations"
+msgid "Translations"
+msgstr "Traduzioni"
+
+#: includes/class-admin-hooks.php:183
+msgid "(not used: an older translation already covers this language)"
+msgstr "(non utilizzato: questa lingua è già trattata in una traduzione precedente)"
+
+#. translators: 1: Post title, 2: Post ID.
+#: includes/class-admin-hooks.php:238
+#, php-format
+msgid "%1$s (#%2$d)"
+msgstr "%1$s (#%2$d)"
+
+#: includes/class-admin-hooks.php:239
+msgid "(no title)"
+msgstr "(senza titolo)"
+
+#: includes/class-admin-hooks.php:321
+msgid "Configure your languages to get started"
+msgstr "Configura le lingue per iniziare"
+
+#: includes/class-admin-hooks.php:387
+#: includes/class-admin-hooks.php:395
+msgctxt "list table column heading"
+msgid "Language"
+msgstr "Lingua"
+
+#: includes/class-plugin.php:124
+msgctxt "plugin action link"
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: includes/class-settings.php:39
+msgctxt "admin menu label"
+msgid "Content Language"
+msgstr "Lingua dei contenuti"
+
+#: includes/class-settings.php:115
+msgid "Content-Language Header"
+msgstr "Intestazione \"Content-Language\""
+
+#: includes/class-settings.php:123
+#: includes/class-settings.php:308
+msgid "Enable for Post Types"
+msgstr "Abilita per i tipi di post"
+
+#: includes/class-settings.php:139
+msgctxt "settings section heading"
+msgid "Uninstall"
+msgstr "Disinstallazione"
+
+#: includes/class-settings.php:146
+msgid "Plugin data"
+msgstr "Plugin dati"
+
+#: includes/class-settings.php:168
+msgid "Delete all plugin data when uninstalled"
+msgstr "Elimina tutti i dati del plugin al momento della disinstallazione"
+
+#: includes/class-settings.php:173
+msgid "When ticked, deleting the plugin from the Plugins screen removes its settings and every language and translation link set on your content. Deactivating never deletes anything."
+msgstr "Se questa opzione è selezionata, l'eliminazione del plugin dalla schermata \"Plugin\" comporta la rimozione delle sue impostazioni e di tutti i link relativi alle lingue e alle traduzioni presenti nei tuoi contenuti. La disattivazione non comporta mai l'eliminazione di alcun dato."
+
+#: includes/class-settings.php:227
+msgid "Search languages by name or code..."
+msgstr "Cerca le lingue per nome o codice..."
+
+#: includes/class-settings.php:228
+msgctxt "button label; empties the search box"
+msgid "Clear"
+msgstr "Cancella"
+
+#. translators: 1: Number of enabled languages, 2: Total number of available languages.
+#: includes/class-settings.php:236
+#, php-format
+msgid "%1$d of %2$d language enabled"
+msgid_plural "%1$d of %2$d languages enabled"
+msgstr[0] "%1$d di %2$d lingue abilitate"
+msgstr[1] "%1$d di %2$d lingue abilitate"
+
+#: includes/class-settings.php:251
+msgid "(site default language)"
+msgstr "(lingua predefinita del sito)"
+
+#: includes/class-settings.php:289
+msgid "Send Content-Language HTTP header for posts with alternative languages"
+msgstr "Invia l'intestazione HTTP \"Content-Language\" per i post disponibili in altre lingue"
+
+#: includes/class-settings.php:294
+msgid "When enabled, the plugin will send a Content-Language HTTP header for posts/pages with an assigned language. This helps search engines and browsers identify the content language."
+msgstr "Se abilitato, il plugin invierà un’intestazione HTTP “Content-Language” per i post e le pagine a cui è stata assegnata una lingua. Ciò aiuta i motori di ricerca e i browser a identificare la lingua dei contenuti."
+
+#: includes/class-settings.php:330
+msgid "Select which post types show the language box in the editor and the Language column in the list of posts. Untick them all to hide both everywhere."
+msgstr "Seleziona i tipi di post per i quali desideri che la casella della lingua venga visualizzata nell'editor e la colonna \"Lingua\" nell'elenco dei post. Deseleziona tutte le opzioni per nascondere entrambe ovunque."

@@ -314,9 +314,8 @@ class Admin_Hooks {
 	public function show_no_languages_notice(): void {
 		if ( $this->should_show_no_languages_notice() ) {
 			printf(
-				'<div class="notice notice-info is-dismissible" data-notice-id="%s"><p><strong>%s</strong> %s <a href="%s">%s</a></p></div>',
+				'<div class="notice notice-info is-dismissible" data-notice-id="%s"><p><strong>Quick WP Lang:</strong> %s <a href="%s">%s</a></p></div>',
 				esc_attr( NOTICE_NO_LANGUAGES ),
-				esc_html__( 'Quick WP Lang:', 'quick-wp-lang' ),
 				esc_html__( 'No languages are enabled yet.', 'quick-wp-lang' ),
 				esc_url( get_settings_page_url() ),
 				esc_html__( 'Configure your languages to get started', 'quick-wp-lang' )
