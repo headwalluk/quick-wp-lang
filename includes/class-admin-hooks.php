@@ -256,6 +256,8 @@ class Admin_Hooks {
 		$should_save = $post_id > 0
 			&& wp_verify_nonce( $nonce_value, NONCE_ACTION_META_BOX )
 			&& ! ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			&& false === wp_is_post_autosave( $post_id )
+			&& false === wp_is_post_revision( $post_id )
 			&& current_user_can( 'edit_post', $post_id );
 
 		if ( $should_save ) {

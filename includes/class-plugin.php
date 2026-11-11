@@ -71,6 +71,7 @@ class Plugin {
 	 */
 	public function run(): void {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
+		add_action( 'init', array( $this, 'register_post_meta' ) );
 
 		$this->settings = new Settings();
 		$this->settings->run();
@@ -103,6 +104,85 @@ class Plugin {
 	 */
 	public function load_textdomain(): void {
 		load_plugin_textdomain( 'quick-wp-lang', false, dirname( QUICK_WP_LANG_BASENAME ) . '/languages' );
+	}
+
+	/**
+	 * Register the language and translation-of meta keys for every post type.
+	 *
+	 * @since 1.4.0
+	 */
+	public function register_post_meta(): void {
+		register_post_meta(
+			'',
+			META_LANGUAGE,
+			array(
+				'type'              => 'string',
+				'single'            => true,
+				'sanitize_callback' => array( $this, 'sanitize_language_meta' ),
+				'auth_callback'     => array( $this, 'can_edit_post_meta' ),
+				'show_in_rest'      => false,
+			)
+		);
+
+		register_post_meta(
+			'',
+			META_TRANSLATION_OF,
+			array(
+				'type'              => 'integer',
+				'single'            => true,
+				'sanitize_callback' => array( $this, 'sanitize_translation_of_meta' ),
+				'auth_callback'     => array( $this, 'can_edit_post_meta' ),
+				'show_in_rest'      => false,
+			)
+		);
+	}
+
+	/**
+	 * Sanitise a stored language: an enabled locale, or '' for the site default.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param mixed $meta_value Value being stored.
+	 *
+	 * @return string
+	 */
+	public function sanitize_language_meta( mixed $meta_value ): string {
+		$language = is_string( $meta_value ) ? $meta_value : DEFAULT_LANGUAGE;
+
+		if ( ! isset( get_enabled_languages_list()[ $language ] ) ) {
+			$language = DEFAULT_LANGUAGE;
+		}
+
+		return $language;
+	}
+
+	/**
+	 * Sanitise a stored original's ID to a non-negative integer.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param mixed $meta_value Value being stored.
+	 *
+	 * @return int
+	 */
+	public function sanitize_translation_of_meta( mixed $meta_value ): int {
+		return is_numeric( $meta_value ) ? max( 0, (int) $meta_value ) : 0;
+	}
+
+	/**
+	 * Allow editing the plugin's post meta to users who can edit the post.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param mixed $allowed   Whether the user can edit the meta, as computed so far.
+	 * @param mixed $meta_key  Meta key.
+	 * @param mixed $object_id Post ID.
+	 * @param mixed $user_id   User ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_post_meta( mixed $allowed, mixed $meta_key, mixed $object_id, mixed $user_id ): bool { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed -- auth_callback signature.
+		return is_numeric( $object_id ) && is_numeric( $user_id ) && user_can( (int) $user_id, 'edit_post', (int) $object_id );
 	}
 
 	/**
