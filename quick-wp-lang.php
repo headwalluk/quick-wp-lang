@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/headwalluk/quick-wp-lang
  * Description: Set the language of individual posts, pages and custom post types for SEO, and link translations to their original, without a full multilingual setup.
  * Version: 1.3.0
- * Requires at least: 7.1
+ * Requires at least: 6.9
  * Requires PHP: 8.2
  * Author: Paul Faulkner
  * Author URI: https://headwall-hosting.com/

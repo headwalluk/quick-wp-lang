@@ -20,13 +20,16 @@
 	<arg name="no-colors"/>
 	<arg name="extensions" value="php"/>
 	<arg name="parallel" value="8"/>
-	
+
+	<!-- Minimum WordPress version targeted -->
+	<config name="minimum_wp_version" value="6.9"/>
+
 	<!-- Rules -->
 	<rule ref="WordPress">
 		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
 
 		<!-- An if with elseif branches ends in an explicit else, with no-op branches
-		     holding only a comment (see CLAUDE.md, PHP Style). This sniff counts a comment as
+		     holding only a comment. This sniff counts a comment as
 		     empty, so only its if/elseif/else codes are excluded; empty catch, loop and
 		     switch bodies are still errors. -->
 		<exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedIf"/>

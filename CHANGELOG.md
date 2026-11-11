@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- The two post meta keys, `_qwl_language` and `_qwl_translation_of`, are now registered with WordPress. A language written by any route (WP-CLI, another plugin) must be one of the enabled languages or it is stored as the site default, and an original's ID is kept to a whole number. Neither key is exposed through the REST API, as before.
+
+### Changed
+
+- **Minimum WordPress version lowered from 7.1 to 6.9.** The plugin uses nothing newer, and 6.9 still receives security fixes.
+- The meta box no longer saves when WordPress is writing an autosave or a revision.
+- `CLAUDE.md` now follows the shared Headwall plugin conventions and holds only what is specific to this plugin.
+
+### Removed
+
+- `readme.txt`. The plugin isn't distributed through WordPress.org, and the updater builds its details panel from the plugin header. `README.md` and `docs/` hold its content, and release builds now check only the plugin header and `QUICK_WP_LANG_VERSION` against the tag.
+
 ## [1.3.0] - 2026-11-09
 
 ### Added

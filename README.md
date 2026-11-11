@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/github/v/release/headwalluk/quick-wp-lang?label=version&color=blue)](https://github.com/headwalluk/quick-wp-lang/releases/latest)
 [![PHP](https://img.shields.io/badge/PHP-8.2+-purple.svg)](https://www.php.net/)
-[![WordPress](https://img.shields.io/badge/WordPress-7.1+-21759B.svg)](https://wordpress.org/)
+[![WordPress](https://img.shields.io/badge/WordPress-6.9+-21759B.svg)](https://wordpress.org/)
 [![License](https://img.shields.io/badge/license-GPL--2.0+-green.svg)](LICENSE)
 [![Coding Standards](https://img.shields.io/badge/WordPress-Coding%20Standards-blue.svg)](https://github.com/WordPress/WordPress-Coding-Standards)
 
@@ -49,7 +49,7 @@ WordPress doesn't update must-use plugins, so the bundled updater doesn't apply.
 
 ### Requirements
 
-- WordPress 7.1 or later
+- WordPress 6.9 or later
 - PHP 8.2 or later
 
 ## Documentation
